@@ -1,0 +1,201 @@
+/* R13 APP-1 · 安装条、安装页、离线空状态。只消费 tokens.css。 */
+
+.pwa-bars {
+  position: fixed;
+  z-index: 80;
+  inset-inline: 0;
+  inset-block-end: var(--space-6);
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding-inline: var(--space-4);
+  pointer-events: none;
+}
+.pwa-bar {
+  pointer-events: auto;
+  width: min(640px, 100%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-3);
+  animation: pwa-rise var(--motion-enter) var(--ease-out);
+}
+.pwa-bar img {
+  width: var(--space-10);
+  height: var(--space-10);
+  flex: none;
+  border-radius: var(--radius-control);
+}
+.pwa-bar > div { min-width: 0; flex: 1; display: grid; gap: var(--space-1); }
+.pwa-bar strong {
+  color: var(--ink);
+  font: var(--weight-semibold) var(--text-item)/var(--leading-item) var(--sans);
+}
+.pwa-bar p,
+.pwa-note,
+.pwa-empty {
+  margin: 0;
+  color: var(--muted);
+  font: var(--weight-regular) var(--text-ui)/var(--leading-ui) var(--sans);
+}
+.pwa-bar .button { flex: none; }
+.pwa-ios {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.pwa-ios li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--touch-target);
+}
+.pwa-ios li > span,
+.pwa-share {
+  width: var(--touch-target);
+  height: var(--touch-target);
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-control);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font: var(--weight-semibold) var(--text-ui)/var(--leading-ui) var(--sans);
+}
+.pwa-share svg { width: var(--icon-nav); height: var(--icon-nav); }
+.pwa-ios b {
+  display: block;
+  color: var(--ink);
+  font: var(--weight-semibold) var(--text-ui)/var(--leading-ui) var(--sans);
+}
+.pwa-ios p { margin: 0; }
+
+.pwa-page {
+  display: grid;
+  gap: var(--space-6);
+  min-width: 0;
+  max-width: 880px;
+  margin-left: 0;
+}
+.pwa-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-6);
+}
+.pwa-side {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-6);
+}
+.pwa-head,
+.pwa-panel {
+  display: grid;
+  gap: var(--space-3);
+}
+.pwa-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:var(--control-height);
+  color:var(--muted);
+  font-size:var(--text-meta);
+}
+.pwa-head>.pill{flex:none}
+.pwa-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.pwa-title-row .chip { flex: none; }
+.pwa-head h1,
+.pwa-panel h2,
+.pwa-offline h1 { margin: 0; color: var(--ink); }
+.pwa-head h1 {
+  font: var(--weight-bold) var(--text-display)/var(--leading-display) var(--display);
+  letter-spacing: var(--tracking-tight);
+}
+.pwa-panel {
+  padding: var(--space-5);
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+.pwa-panel h2 {
+  font: var(--weight-semibold) var(--text-section)/var(--leading-section) var(--display);
+}
+.pwa-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.pwa-recent {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pwa-recent li {
+  padding-block-end: var(--space-3);
+  border-block-end: var(--line-1) solid var(--line-soft);
+}
+.pwa-recent a {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  color: var(--ink);
+}
+.pwa-recent b {
+  min-width: 0;
+  font: var(--weight-semibold) var(--text-item)/var(--leading-item) var(--sans);
+}
+.pwa-recent small { color: var(--faint); font-size: var(--text-meta); }
+
+.pwa-offline-body { background: var(--paper); }
+.pwa-offline {
+  min-height: 100vh;
+  max-width: 480px;
+  margin-inline: auto;
+  padding: var(--space-16) var(--space-6);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--space-4);
+  text-align: center;
+}
+.pwa-offline img { width: min(240px, 70vw); height: auto; }
+.pwa-offline h1 {
+  font: var(--weight-bold) var(--text-feature)/var(--leading-feature) var(--display);
+}
+.pwa-offline p {
+  margin: 0;
+  color: var(--muted);
+  font: var(--weight-regular) var(--text-body)/var(--leading-body) var(--sans);
+}
+
+@keyframes pwa-rise {
+  from { opacity: 0; transform: translateY(var(--space-2)); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 760px) {
+  .pwa-bars {
+    inset-block-end: calc(var(--space-16) + var(--space-4) + env(safe-area-inset-bottom, 0px));
+  }
+  .pwa-bar { align-items: flex-start; }
+  .pwa-page { gap: var(--space-4); }
+  .pwa-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
+  .pwa-side { gap: var(--space-4); }
+  .pwa-panel { padding: var(--space-4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pwa-bar { animation: none; transform: none; }
+  .pwa-ios li { transform: none; }
+}

@@ -1,0 +1,21 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "示例 JSON Feed（手写假数据）",
+  "items": [
+    {
+      "id": "1",
+      "url": "https://json.example.test/issue/42/",
+      "title": "AI 周刊 #42：多智能体协作",
+      "content_text": "本期收录 12 条链接，覆盖多智能体协作、评测与开源工具。",
+      "date_published": "2026-10-25T00:00:00Z"
+    },
+    {
+      "id": "2",
+      "external_url": "http://other.example.test/post?utm_source=newsletter&ref=abc&k=v",
+      "title": "External link item",
+      "summary": "Points to another site.",
+      "date_modified": "2026-10-24T12:00:00+00:00"
+    },
+    { "id": "3", "title": "missing url" }
+  ]
+}

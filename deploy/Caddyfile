@@ -1,0 +1,66 @@
+{
+	admin 127.0.0.1:2019
+}
+
+{$COMMONS_SITE_DOMAIN} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(self), microphone=(self)"
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' wss://{$COMMONS_LIVEKIT_DOMAIN}; frame-src https://{$COMMONS_CONTENT_DOMAIN}; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+	}
+
+	@api path /api/*
+	handle @api {
+		header Cache-Control "no-store"
+		reverse_proxy 127.0.0.1:{$COMMONS_API_PORT}
+	}
+
+	# ROOM-1 enables this only after join-grant and revocation tests pass.
+	# @rtc path /rtc*
+	# handle @rtc {
+	# 	forward_auth 127.0.0.1:{$COMMONS_API_PORT} {
+	# 		uri /api/rooms/gate
+	# 		copy_headers X-Commons-Principal X-Commons-Room-Grant
+	# 	}
+	# 	reverse_proxy 127.0.0.1:7880
+	# }
+
+	handle {
+		@hashed path_regexp hashed "\\.[0-9a-fA-F]{8,}\\.(css|js|png|jpg|jpeg|webp|avif|woff2)$"
+		header @hashed Cache-Control "public, max-age=31536000, immutable"
+		root * /opt/commons/current/preview
+		try_files {path} /index.html
+		file_server
+	}
+}
+
+{$COMMONS_CONTENT_DOMAIN} {
+	encode zstd gzip
+	root * /srv/commons-user-content
+
+	header {
+		-Set-Cookie
+		Content-Security-Policy "sandbox allow-scripts; default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; frame-ancestors https://{$COMMONS_SITE_DOMAIN}"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		Cache-Control "public, max-age=300"
+	}
+
+	# The app stores files as <kind>/<sha[:2]>/<sha> and links them as /c/<kind>/<sha>.
+	# Only html_work is public here: upload_raw (originals, EXIF intact), img_* (served by
+	# the authenticated API) and account exports must stay unreachable from this domain.
+	@work path_regexp work ^/c/html_work/([0-9a-f]{2})([0-9a-f]{62})$
+	handle @work {
+		rewrite * /html_work/{re.work.1}/{re.work.1}{re.work.2}
+		header Content-Type "text/html; charset=utf-8"
+		file_server
+	}
+
+	handle {
+		respond 404
+	}
+}

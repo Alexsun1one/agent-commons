@@ -1,0 +1,2 @@
+"""KB module tests."""
+

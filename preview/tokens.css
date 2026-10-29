@@ -1,0 +1,242 @@
+/* Shared design values · v2（R12，2026-10-25）。组件样式只消费这里的变量；其他文件不写 :root。
+   规则正本：docs/design/visual-system-v2.md。蓝 = 人做的事 / 选中；青 = Agent 与知识；紫 = 判断与教学。
+   不用黄、橙、棕：提醒用紫，危险用玫红。 */
+:root {
+  /* 中性阶（冷灰，九成界面用它） */
+  --slate-25: #fbfcfd;
+  --slate-50: #f6f7f9;
+  --slate-100: #eef1f5;
+  --slate-200: #e6e9ef;
+  --slate-300: #cfd5df;
+  --slate-400: #a9b1bd;
+  --slate-500: #8a93a2;
+  --slate-600: #5f6979;
+  --slate-700: #3d4656;
+  --slate-800: #273042;
+  --slate-900: #1b2130;
+
+  /* 色相阶：蓝（品牌）、青（Agent / 知识）、紫（判断 / 教学）、天蓝、翠绿、玫红 */
+  --blue-50: #f2f5ff;
+  --blue-100: #e4eaff;
+  --blue-200: #cbd7fe;
+  --blue-300: #a6b9fb;
+  --blue-400: #7a93f4;
+  --blue-500: #5270ee;
+  --blue-600: #3458e8;
+  --blue-700: #2a46c0;
+  --blue-800: #253b98;
+  --blue-900: #1f3172;
+  --teal-50: #effaf9;
+  --teal-100: #d5f2ef;
+  --teal-200: #aee4df;
+  --teal-300: #7dcfc9;
+  --teal-400: #44b3ae;
+  --teal-500: #1f9893;
+  --teal-600: #157d7b;
+  --teal-700: #166466;
+  --teal-800: #175154;
+  --teal-900: #163f42;
+  --violet-50: #f5f3ff;
+  --violet-100: #ebe7fd;
+  --violet-200: #d8d0fb;
+  --violet-300: #bcaef6;
+  --violet-400: #9c87ee;
+  --violet-500: #8066e2;
+  --violet-600: #6d4fd3;
+  --violet-700: #5b3fb5;
+  --violet-800: #4a3591;
+  --violet-900: #3c2d73;
+  --sky-50: #eff8ff;
+  --sky-100: #dbefff;
+  --sky-200: #b9e0fe;
+  --sky-300: #86cbfb;
+  --sky-400: #4cb0f5;
+  --sky-500: #2195e6;
+  --sky-600: #1477c4;
+  --sky-700: #135f9e;
+  --green-50: #ecfbf3;
+  --green-100: #d2f5e2;
+  --green-200: #a6e9c6;
+  --green-300: #6fd5a3;
+  --green-400: #3dbb80;
+  --green-500: #1f9d66;
+  --green-600: #157f53;
+  --green-700: #146545;
+  --rose-50: #fff1f4;
+  --rose-100: #ffe2e9;
+  --rose-200: #fec9d6;
+  --rose-300: #fca1b7;
+  --rose-400: #f66f92;
+  --rose-500: #e64775;
+  --rose-600: #cc2d5f;
+  --rose-700: #a8234d;
+
+  /* 分类色：问题簇、主题、作品类别。只用于图形和识别，不用于正文；避开品牌蓝、Agent 青和语义色，明暗交替 */
+  --cat-1: #0891b2;
+  --cat-2: #5b5fe0;
+  --cat-3: #38a3e8;
+  --cat-4: #8b5cf6;
+  --cat-5: #26408f;
+  --cat-6: #d0459c;
+  --cat-7: #155e75;
+  --cat-8: #b04fc7;
+  --cat-9: #8c9cf2;
+  --cat-10: #64748b;
+
+  /* 角色（页面代码优先用这一层） */
+  --paper: var(--slate-50);
+  --surface: #fff;
+  --surface-raised: #fff;
+  --sunk: #f2f4f7;
+  --tint-blue: var(--blue-50);
+  --tint-teal: var(--teal-50);
+  --tint-violet: var(--violet-50);
+  --ink: var(--slate-900);
+  --ink-2: var(--slate-700);
+  --muted: var(--slate-600);
+  --faint: var(--slate-500);
+  --line: var(--slate-200);
+  --line-strong: var(--slate-300);
+  --line-soft: rgba(27, 33, 48, .06);
+  --control-line: #d5dbe5;
+  --accent: var(--blue-600);
+  --accent-hover: var(--blue-700);
+  --accent-ink: var(--blue-700);
+  --accent-soft: #edf1ff;
+  --accent-line: #c9d5fb;
+  --on-accent: #fff;
+  --forest: var(--accent);
+  --agent: var(--teal-500);
+  --agent-ink: var(--teal-700);
+  --agent-soft: var(--teal-50);
+  --agent-line: var(--teal-200);
+
+  /* 语义色（各配淡底与描边） */
+  --success: var(--green-500);
+  --success-ink: var(--green-700);
+  --success-soft: var(--green-50);
+  --success-line: var(--green-200);
+  --info: var(--sky-500);
+  --info-ink: var(--sky-700);
+  --info-soft: var(--sky-50);
+  --info-line: var(--sky-200);
+  --notice: var(--violet-600);
+  --notice-ink: var(--violet-700);
+  --notice-soft: var(--violet-50);
+  --notice-line: var(--violet-200);
+  --danger: var(--rose-600);
+  --danger-ink: var(--rose-700);
+  --danger-soft: var(--rose-50);
+  --danger-line: var(--rose-200);
+
+  /* 内容身份（不表示成败，也不推断成员状态） */
+  --stage-source: #354765;
+  --stage-operation: #4164bb;
+  --stage-judgement: var(--violet-600);
+  --stage-outcome: #317b73;
+  --knowledge-ink: #276d75;
+  --knowledge-soft: #e8f2f2;
+  --knowledge-face: #d7e8e9;
+  --knowledge-side: #adcbd0;
+  --workflow-ink: #3d5fb8;
+  --workflow-soft: #ecf0fb;
+  --workflow-face: #dde5f8;
+  --workflow-side: #bccbee;
+  --teaching-ink: var(--violet-700);
+  --teaching-soft: #f1effb;
+  --teaching-face: #e3dff6;
+  --teaching-side: #c4bce9;
+
+  /* 字体：西文在前，中文在后；数字用等宽数位 */
+  --sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --serif: var(--sans);
+  --mono: 'SF Mono', SFMono-Regular, ui-monospace, Menlo, Consolas, monospace;
+  --num-features: 'tnum' 1, 'lnum' 1;
+
+  /* 字阶：全站只有这 10 档 */
+  --text-hero: 40px;
+  --text-stat: 32px;
+  --text-display: 28px;
+  --text-feature: 22px;
+  --text-section: 18px;
+  --text-item: 15px;
+  --text-body: 14px;
+  --text-ui: 13px;
+  --text-meta: 12px;
+  --text-micro: 11px;
+  --leading-hero: 48px;
+  --leading-stat: 36px;
+  --leading-display: 36px;
+  --leading-feature: 30px;
+  --leading-section: 26px;
+  --leading-item: 22px;
+  --leading-body: 22px;
+  --leading-ui: 20px;
+  --leading-meta: 18px;
+  --leading-micro: 16px;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --tracking-tight: -.02em;
+  --tracking-snug: -.01em;
+  --tracking-label: .08em;
+
+  /* 间距（4 的倍数） */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* 圆角 · 线 · 尺寸 */
+  --radius-thumb: 4px;
+  --radius-control: 8px;
+  --radius-panel: 12px;
+  --radius-stage: 16px;
+  --radius-pill: 999px;
+  --line-1: 1px;
+  --line-2: 2px;
+  --control-height: 36px;
+  --control-compact: 32px;
+  --control-large: 44px;
+  --touch-target: 44px;
+  --icon-control: 16px;
+  --icon-nav: 18px;
+  --icon-meta: 14px;
+
+  /* 阴影三级（双层，冷色投影）+ 品牌光 + 焦点环 */
+  --shadow-1: 0 1px 2px rgba(16, 24, 40, .05), 0 1px 3px rgba(16, 24, 40, .07);
+  --shadow-2: 0 2px 4px -1px rgba(16, 24, 40, .05), 0 8px 20px -4px rgba(16, 24, 40, .10);
+  --shadow-3: 0 4px 10px -2px rgba(16, 24, 40, .07), 0 24px 48px -12px rgba(16, 24, 40, .20);
+  --shadow-accent: 0 1px 2px rgba(42, 70, 192, .28), 0 6px 16px -4px rgba(52, 88, 232, .38);
+  --shadow-inset-highlight: inset 0 1px 0 rgba(255, 255, 255, .18);
+  --shadow: var(--shadow-2);
+  --ring: 0 0 0 3px rgba(52, 88, 232, .26);
+  --ring-offset: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent);
+
+  /* 动效：时长五档、曲线四条；减弱动效时只留透明度 */
+  --motion-fast: 120ms;
+  --motion-base: 180ms;
+  --motion-enter: 240ms;
+  --motion-layout: 320ms;
+  --motion-stage: 480ms;
+  --motion-exit: 120ms;
+  --stagger: 32ms;
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --ease-drawer: cubic-bezier(.32, .72, 0, 1);
+  /* 回弹只用在 transform 上；不支持 linear() 的浏览器退回 back-out 曲线 */
+  --ease-spring: cubic-bezier(.34, 1.4, .64, 1);
+}
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    --ease-spring: linear(0, .009, .035 2.1%, .141, .281 6.7%, .723 12.9%, .938 16.7%, 1.017, 1.077 24.3%, 1.104 27.6%, 1.108 31.1%, 1.094 34.7%, 1.006 49.3%, .993 55.1%, 1.001 76.4%, 1);
+  }
+}

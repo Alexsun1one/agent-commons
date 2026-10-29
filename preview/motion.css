@@ -1,0 +1,102 @@
+/* R9: short, interruptible feedback. Resting geometry is the R8 layout. */
+html{scroll-behavior:auto;}
+.app-shell{overflow-x:clip;min-height:100vh;min-height:100dvh;}body:not([data-route]) .app-footer{display:none;}
+[data-motion-tabs]{position:relative;}
+.motion-tab-line{position:absolute;left:0;bottom:0;display:block;width:1px;height:2px;background:var(--accent);transform-origin:left center;pointer-events:none;}
+[data-motion-tabs] button[aria-pressed="true"],[data-motion-tabs] button.active{border-bottom-color:transparent;}
+.schematic-node .stage-object{transition:transform var(--motion-base) var(--ease-out);transform-origin:center;}
+.schematic-node.is-selected .stage-object{transform:translateY(-4px);}
+.schematic-node .slab-shadow{transition:transform var(--motion-base) var(--ease-out),opacity var(--motion-base) var(--ease-out);transform-box:fill-box;transform-origin:center;}
+.schematic-node.is-selected .slab-shadow{transform:translateY(3px) scale(.94);opacity:.65;}
+.schematic-wire.is-current{stroke:var(--work-ink);stroke-width:1.8;}
+.flow-signal{opacity:0;fill:var(--work-ink);pointer-events:none;}
+.work-stage-bottom .work-step-detail{min-height:56px;align-items:center;}
+.work-stage-footer .flow-demo-button{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-1);font-size:var(--text-meta);white-space:nowrap;min-height:32px;padding:var(--space-2) var(--space-1);border:0;border-radius:var(--radius-thumb);color:var(--work-ink);background:transparent;}
+.flow-demo-button svg{width:14px;height:14px;}
+.flow-demo-button[aria-pressed="true"]{background:color-mix(in oklab,var(--work-ink) 10%,transparent);}
+.flow-demo-button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+#sidebar .nav-tree-chevron{transition:transform var(--motion-base) var(--ease-out);}
+#sidebar .nav-tree-branch{transform-origin:top left;}
+#sidebar .nav-tree-children{transform-origin:top left;}
+.flow-demo-button,.craft-invite{transition:transform var(--motion-fast) var(--ease-out);}
+html[data-input="pointer"] :is(.flow-demo-button,.craft-invite,.nav-tree-width):active{transform:scale(.97);}
+.toast{transition:opacity var(--motion-exit) var(--ease-out),transform var(--motion-exit) var(--ease-out);}
+.toast.show{transition-duration:var(--motion-base);}
+.toast-copy{display:block;}
+@media(hover:hover) and (pointer:fine){
+ html[data-input="pointer"] .work-schematic:has(.schematic-step[data-value="0"]:hover) [data-node="0"] .stage-object,
+ html[data-input="pointer"] .work-schematic:has(.schematic-step[data-value="1"]:hover) [data-node="1"] .stage-object,
+ html[data-input="pointer"] .work-schematic:has(.schematic-step[data-value="2"]:hover) [data-node="2"] .stage-object,
+ html[data-input="pointer"] .work-schematic:has(.schematic-step[data-value="3"]:hover) [data-node="3"] .stage-object{transform:translateY(-7px);}
+ .ledger-person .avatar,.craft-buddy-person .avatar{transition:transform var(--motion-base) var(--ease-out);}
+ html[data-input="pointer"] .ledger-person:hover .avatar,html[data-input="pointer"] .craft-buddy-person:hover .avatar{transform:scale(1.07);}
+ .ledger-expand>svg,.craft-section-head>a>svg,.craft-side-link>svg{transition:transform var(--motion-base) var(--ease-out);}
+ html[data-input="pointer"] .ledger-expand:hover>svg,html[data-input="pointer"] .craft-section-head>a:hover>svg,html[data-input="pointer"] .craft-side-link:hover>svg{transform:translateX(3px);}
+ .flow-demo-button:hover{background:color-mix(in oklab,var(--work-ink) 8%,transparent);}
+}
+@media(max-width:760px){
+ #sidebar{transition:transform var(--motion-exit) var(--ease-drawer);}
+ #sidebar.open{transition-duration:var(--motion-enter);}
+ .nav-backdrop{transition:opacity var(--motion-exit) var(--ease-out);}
+ .work-stage-footer .flow-demo-button{min-height:44px;margin-right:auto;padding-inline:var(--space-1);}
+ .work-stage-bottom .work-step-detail{min-height:56px;}
+ .work-stage-footer{gap:var(--space-1);}
+}
+@media(max-width:359px){.work-stage-footer :is(.button,.flow-demo-button){padding-inline:var(--space-1);}.flow-demo-button{gap:var(--space-1);}}
+/* Keyboard commands and reduced-motion preferences commit their state immediately. */
+html[data-input="keyboard"] *,html[data-input="keyboard"] *::before,html[data-input="keyboard"] *::after{transition-duration:0s!important;animation-duration:0s!important;scroll-behavior:auto!important;}
+@media(prefers-reduced-motion:reduce){
+ /* 减弱动效：位移与缩放归零，只留 --motion-fast 的透明度过渡。 */
+ *,*::before,*::after{transition-property:opacity!important;transition-duration:var(--motion-fast)!important;transition-timing-function:var(--ease-out)!important;transition-delay:0s!important;animation-duration:0s!important;scroll-behavior:auto!important;}
+ .schematic-node .stage-object,.schematic-node.is-selected .stage-object{transform:none!important;}
+ html[data-input="pointer"] :is(.flow-demo-button,.craft-invite,.nav-tree-width):active{transform:none;}
+}
+
+/* ── v2 提示条与弹层 · R12-W2 SHELL-2：进场用 spring（只作用于 transform），退场用 --motion-exit。 */
+.toast{
+  display:flex;
+  align-items:center;
+  gap:var(--space-2);
+  padding:var(--space-3) var(--space-5);
+  border:var(--line-1) solid color-mix(in oklab,var(--surface) 10%,transparent);
+  border-radius:var(--radius-panel);
+  background:color-mix(in oklab,var(--slate-900) 94%,var(--blue-900));
+  color:var(--on-accent);
+  font-size:var(--text-ui);
+  line-height:var(--leading-ui);
+  font-weight:var(--weight-medium);
+  box-shadow:var(--shadow-3),var(--shadow-inset-highlight);
+  opacity:0;
+  transform:translate(-50%,var(--space-4)) scale(.96);
+  transition:opacity var(--motion-exit) var(--ease-out),transform var(--motion-exit) var(--ease-out);}
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0) scale(1);
+  transition:opacity var(--motion-enter) var(--ease-out),transform var(--motion-layout) var(--ease-spring);}
+.toast::before{content:"";flex-shrink:0;width:var(--space-2);height:var(--space-2);border-radius:var(--radius-pill);background:var(--sky-300);box-shadow:0 0 0 var(--line-2) color-mix(in oklab,var(--sky-300) 24%,transparent);}
+.toast-copy{min-width:0;}
+
+dialog{
+  border:var(--line-1) solid var(--line);
+  border-radius:var(--radius-stage);
+  background:var(--surface);
+  color:var(--ink);
+  box-shadow:var(--shadow-3);}
+dialog .dialog-head{background:color-mix(in oklab,var(--surface) 92%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:var(--line-1) solid var(--line-soft);}
+dialog .dialog-head h2{font-family:var(--display);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-snug);color:var(--ink);}
+dialog .dialog-head .icon-button{font-size:var(--text-feature);line-height:1;}
+dialog::backdrop{
+  background:color-mix(in oklab,color-mix(in oklab,var(--slate-900),var(--blue-900) 35%) 34%,transparent);
+  -webkit-backdrop-filter:blur(6px) saturate(1.1);
+  backdrop-filter:blur(6px) saturate(1.1);}
+dialog[open]::backdrop{animation:dialog-backdrop-in var(--motion-enter) var(--ease-out);}
+@keyframes dialog-backdrop-in{from{opacity:0;}}
+
+@media(max-width:760px){
+  .toast{padding:var(--space-3) var(--space-4);font-size:var(--text-meta);line-height:var(--leading-meta);}
+  dialog{border-radius:var(--radius-stage);}
+}
+@media(prefers-reduced-motion:reduce){
+  .toast,.toast.show{transform:translate(-50%,0);}
+}
+dialog [tabindex="-1"]:focus,#dialog-title:focus{outline:none;}

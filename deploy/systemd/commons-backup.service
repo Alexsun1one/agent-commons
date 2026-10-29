@@ -1,0 +1,16 @@
+[Unit]
+Description=Commons SQLite and withdrawal-log backup
+After=local-fs.target
+
+[Service]
+Type=oneshot
+User=commons
+Group=commons
+EnvironmentFile=/etc/commons/env
+ExecStart=/opt/commons/deploy/backup.sh
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+

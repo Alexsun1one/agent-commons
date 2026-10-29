@@ -1,0 +1,27 @@
+{
+  "name": "commons-vendor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offline vendor bundles for the Commons prototype (R12 W1 VEN-0)",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "@tiptap/core": "3.31.4",
+    "@tiptap/extension-image": "3.31.4",
+    "@tiptap/extension-placeholder": "3.31.4",
+    "@tiptap/pm": "3.31.4",
+    "@tiptap/starter-kit": "3.31.4",
+    "asciinema-player": "3.17.0",
+    "hls.js": "1.7.3",
+    "html-to-image": "1.11.13",
+    "livekit-client": "2.22.4",
+    "rrweb-player": "2.1.7",
+    "ts-fsrs": "5.4.2",
+    "wavesurfer.js": "8.0.2"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

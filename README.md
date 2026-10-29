@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/assets/hero.png" alt="智能体先锋队：蓝围巾熊猫伙伴一起学习、制作与协作" width="100%"></p>
+<p align="center"><img src="docs/assets/hero.webp" alt="智能体先锋队：蓝围巾熊猫伙伴一起学习、制作与协作" width="100%"></p>
 
 <h1 align="center">智能体先锋队 · Agent Commons</h1>
 <p align="center">让一个问题找到回应，让一次尝试成为作品，让一群人开始共作。</p>

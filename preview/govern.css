@@ -1,0 +1,167 @@
+/* R13 GOV-1 · 治理台 #/govern。数值只用 tokens.css；蓝白为主，风险用 danger 一族，Agent 用 teal，通知用 violet。 */
+
+.gov-page { display: grid; gap: var(--space-4); }
+
+.gov-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-4); }
+.gov-head p { color: var(--muted); font-size: var(--text-ui); line-height: var(--leading-ui); max-width: 64ch; margin: 0; }
+.gov-head-actions { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+.gov-viewer { flex: none; }
+
+.gov-demo-pill { background: var(--accent-soft); color: var(--accent-ink); margin-left: var(--space-2); }
+
+/* 统计条与先审后发 */
+.gov-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-3); }
+.gov-stat { display: grid; gap: var(--space-1); align-content: start; padding: var(--space-4); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-panel); }
+.gov-stat-label { font-size: var(--text-meta); color: var(--muted); }
+.gov-stat strong { font-size: var(--text-stat); line-height: var(--leading-stat); font-weight: var(--weight-semibold); color: var(--ink); font-variant-numeric: tabular-nums; }
+.gov-stat small { font-size: var(--text-micro); color: var(--muted); line-height: var(--leading-micro); }
+.gov-stat.is-danger strong { color: var(--danger-ink); }
+.gov-stat.is-agent strong { color: var(--agent-ink); }
+.gov-premod { border-color: var(--danger-line); }
+.gov-premod.is-on { background: var(--danger-soft); }
+.gov-premod .button { justify-self: start; }
+.gov-premod-confirm { grid-column: 1 / -1; display: grid; gap: var(--space-3); padding: var(--space-4); background: var(--danger-soft); border: 1px solid var(--danger-line); border-radius: var(--radius-panel); }
+.gov-premod-confirm p { margin: 0; color: var(--ink-2); font-size: var(--text-ui); line-height: var(--leading-ui); }
+.gov-premod-confirm strong { color: var(--danger-ink); margin-right: var(--space-2); }
+
+.gov-tabs { margin-top: var(--space-2); }
+
+/* 三栏：队列 / 详情 / 动作 */
+.gov-grid { display: grid; grid-template-columns: minmax(260px, 320px) minmax(0, 1fr) minmax(260px, 340px); gap: var(--space-4); align-items: start; }
+.gov-queue, .gov-detail, .gov-panel { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-panel); padding: var(--space-4); min-width: 0; }
+.gov-queue { display: grid; gap: var(--space-3); position: sticky; top: 84px; max-height: calc(100vh - 100px); overflow: auto; }
+.gov-filter { width: 100%; }
+.gov-risk-filter { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.gov-risk-filter .chip[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent-ink); }
+.gov-queue-list { display: grid; gap: var(--space-2); }
+
+.risk-critical { --gov-risk: var(--danger); }
+.risk-high { --gov-risk: var(--rose-400); }
+.risk-medium { --gov-risk: var(--accent); }
+.risk-low { --gov-risk: var(--slate-300); }
+
+.gov-item { display: grid; gap: var(--space-1); width: 100%; text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--gov-risk, var(--line)); border-radius: var(--radius-control); padding: var(--space-3); cursor: pointer; transition: background-color var(--motion-fast) var(--ease-out), border-color var(--motion-fast) var(--ease-out); }
+.gov-item:hover { background: var(--slate-50); }
+.gov-item:focus-visible { outline: none; box-shadow: var(--ring-offset); }
+.gov-item.is-selected { background: var(--accent-soft); border-color: var(--accent-line); border-left-color: var(--gov-risk, var(--accent)); }
+.gov-item-top { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+.gov-risk { font-size: var(--text-micro); font-weight: var(--weight-semibold); color: var(--ink-2); }
+.gov-item .chip { min-height: 0; padding: 2px var(--space-2); font-size: var(--text-micro); background: var(--sunk); }
+.gov-source { font-size: var(--text-micro); color: var(--muted); margin-left: auto; }
+.gov-item-title { font-size: var(--text-ui); line-height: var(--leading-ui); font-weight: var(--weight-medium); overflow-wrap: anywhere; }
+.gov-item-meta { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); font-size: var(--text-micro); color: var(--muted); }
+.gov-overdue { color: var(--danger-ink); font-weight: var(--weight-semibold); }
+.gov-wait { color: var(--notice-ink); }
+
+/* 详情 */
+.gov-detail { display: grid; gap: var(--space-3); }
+.gov-detail h4, .gov-panel h4 { font-size: var(--text-meta); color: var(--muted); font-weight: var(--weight-semibold); margin: var(--space-2) 0 0; }
+.gov-detail-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.gov-risk-badge { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--text-meta); font-weight: var(--weight-semibold); color: var(--ink); padding: 2px var(--space-2); border-radius: var(--radius-thumb); background: var(--sunk); border-left: 4px solid var(--gov-risk, var(--line)); }
+.gov-subject { margin: 0; font-size: var(--text-meta); color: var(--ink-2); }
+.gov-dim { color: var(--muted); font-size: var(--text-micro); line-height: var(--leading-micro); }
+.gov-note { color: var(--muted); font-size: var(--text-meta); margin: 0; }
+.gov-empty { color: var(--muted); font-size: var(--text-ui); padding: var(--space-6) 0; text-align: center; margin: 0; }
+.gov-error { color: var(--danger-ink); background: var(--danger-soft); border: 1px solid var(--danger-line); border-radius: var(--radius-control); padding: var(--space-2) var(--space-3); margin: 0; font-size: var(--text-meta); }
+.gov-warn { color: var(--notice-ink); background: var(--notice-soft); border: 1px solid var(--notice-line); border-radius: var(--radius-control); padding: var(--space-2) var(--space-3); margin: 0; font-size: var(--text-meta); }
+
+.gov-preview { display: grid; gap: var(--space-2); padding: var(--space-4); background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--radius-control); }
+.gov-preview h3 { font-size: var(--text-item); line-height: var(--leading-item); margin: 0; }
+.gov-preview-head { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; font-size: var(--text-micro); color: var(--muted); }
+.gov-preview-gone { text-align: center; padding: var(--space-8) var(--space-4); }
+.gov-preview-gone strong { font-size: var(--text-section); color: var(--ink-2); }
+.gov-preview-gone p { margin: 0; color: var(--muted); font-size: var(--text-meta); }
+.gov-text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--text-body); line-height: var(--leading-body); color: var(--ink); }
+.gov-mark { display: inline-block; max-width: 100%; background: var(--danger-soft); color: var(--danger-ink); border-bottom: 2px solid var(--danger-line); border-radius: var(--radius-thumb); padding: 0 2px; line-height: inherit; overflow-wrap: anywhere; vertical-align: baseline; }
+.gov-html { min-height: 320px; border: 1px solid var(--line); border-radius: var(--radius-control); overflow: hidden; background: var(--paper); }
+.gov-media { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+.gov-suggest { display: grid; gap: var(--space-2); padding: var(--space-3) var(--space-4); background: var(--agent-soft); border: 1px solid var(--agent-line); border-radius: var(--radius-control); }
+.gov-suggest-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: var(--text-meta); color: var(--agent-ink); }
+.gov-suggest-pill { background: var(--paper); color: var(--agent-ink); border: 1px solid var(--agent-line); }
+.gov-suggest p { margin: 0; font-size: var(--text-ui); color: var(--ink); }
+.gov-suggest .button { justify-self: start; }
+
+.gov-signals, .gov-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.gov-signal { padding: var(--space-3); border: 1px solid var(--line-soft); border-radius: var(--radius-control); background: var(--surface); }
+.gov-signal.is-agent { border-color: var(--agent-line); }
+.gov-signal p { margin: var(--space-1) 0; font-size: var(--text-meta); color: var(--ink-2); }
+.gov-signal-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: var(--text-meta); }
+.gov-score { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: var(--weight-semibold); color: var(--ink-2); }
+.gov-list li { font-size: var(--text-meta); line-height: var(--leading-meta); padding: var(--space-2) 0; border-top: 1px solid var(--line-soft); }
+
+/* 动作面板 */
+.gov-panel { display: grid; gap: var(--space-3); position: sticky; top: 84px; }
+.gov-panel h3 { font-size: var(--text-section); line-height: var(--leading-section); margin: 0; }
+.gov-group { border: 1px solid var(--line-soft); border-radius: var(--radius-control); padding: var(--space-3); margin: 0; display: grid; gap: var(--space-2); }
+.gov-group legend { font-size: var(--text-meta); font-weight: var(--weight-semibold); color: var(--ink-2); padding: 0 var(--space-1); }
+.gov-group.is-two { border-color: var(--danger-line); }
+.gov-group.is-two legend { color: var(--danger-ink); }
+.gov-actions { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.gov-action { border: 1px solid var(--line); }
+.gov-action[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent-ink); border-color: var(--accent-line); }
+.gov-group.is-two .gov-action[aria-pressed="true"] { background: var(--danger-soft); color: var(--danger-ink); border-color: var(--danger-line); }
+.gov-action:disabled { color: var(--faint); cursor: not-allowed; }
+.gov-panel .field textarea, .gov-premod-confirm textarea, .gov-appeal textarea, .gov-rule-form textarea { width: 100%; resize: vertical; }
+.gov-notice-wrap { display: grid; gap: var(--space-2); }
+.gov-notice { padding: var(--space-3); background: var(--notice-soft); border: 1px solid var(--notice-line); border-radius: var(--radius-control); }
+.gov-notice strong { font-size: var(--text-ui); color: var(--notice-ink); }
+.gov-notice p { margin: var(--space-1) 0 0; white-space: pre-wrap; font-size: var(--text-meta); line-height: var(--leading-meta); color: var(--ink-2); }
+.gov-waiting { display: grid; gap: var(--space-2); padding: var(--space-3); background: var(--danger-soft); border: 1px solid var(--danger-line); border-radius: var(--radius-control); }
+.gov-waiting h4 { margin: 0; color: var(--danger-ink); }
+.gov-waiting-item { display: grid; gap: var(--space-2); }
+.gov-waiting-item p { margin: 0; font-size: var(--text-meta); }
+.gov-waiting-item .button { justify-self: start; }
+.gov-row { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+
+/* 规则与申诉 */
+.gov-rules, .gov-appeals { display: grid; gap: var(--space-3); }
+.gov-table-wrap { overflow-x: auto; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-panel); }
+.gov-table { width: 100%; border-collapse: collapse; font-size: var(--text-meta); min-width: 760px; }
+.gov-table th { text-align: left; font-weight: var(--weight-semibold); color: var(--muted); padding: var(--space-3); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.gov-table td { padding: var(--space-3); border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+.gov-table td:first-child { max-width: 360px; }
+.gov-off { background: var(--sunk); color: var(--muted); }
+.gov-rule-edit td { background: var(--surface); }
+.gov-rule-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-3); }
+.gov-rule-form .gov-wide { grid-column: 1 / -1; }
+.gov-rule-form textarea { font-family: var(--mono); font-size: var(--text-meta); }
+
+.gov-appeal { display: grid; gap: var(--space-2); padding: var(--space-4); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-panel); }
+.gov-appeal header { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; font-size: var(--text-ui); }
+.gov-appeal header .gov-dim { margin-left: auto; }
+.gov-quote { margin: 0; padding: var(--space-2) var(--space-3); border-left: 4px solid var(--accent-line); background: var(--surface); font-size: var(--text-body); line-height: var(--leading-body); }
+
+/* 非治理员 / 出错 */
+.gov-guard { display: grid; justify-items: center; gap: var(--space-3); text-align: center; padding: var(--space-12) var(--space-6); background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-panel); color: var(--muted); }
+.gov-guard svg { color: var(--accent); }
+.gov-guard h2 { font-size: var(--text-section); line-height: var(--leading-section); color: var(--ink); margin: 0; }
+.gov-guard p { max-width: 48ch; margin: 0; font-size: var(--text-ui); line-height: var(--leading-ui); }
+
+@media (max-width: 1180px) {
+  .gov-grid { grid-template-columns: minmax(240px, 300px) minmax(0, 1fr); }
+  .gov-panel { grid-column: 1 / -1; position: static; }
+}
+
+@media (max-width: 760px) {
+  .gov-grid { grid-template-columns: minmax(0, 1fr); }
+  .gov-queue { position: static; max-height: none; }
+  .gov-head { align-items: flex-start; }
+  .gov-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gov-premod { grid-column: 1 / -1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gov-item { transition: none; }
+}
+
+/* LG-4: public complaint form and human-review queue. */
+.gov-complaint, .gov-complaint-queue { min-width: 0; overflow-wrap: anywhere; }
+.gov-complaint summary { cursor: pointer; font-size: var(--text-ui); color: var(--ink); }
+.gov-complaint .field { margin-block: var(--space-3); }
+.gov-complaint input, .gov-complaint select, .gov-complaint textarea,
+.gov-complaint-queue textarea { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
+.gov-complaint textarea, .gov-complaint-queue textarea { resize: vertical; }
+
+/* R17-G3：聊天消息 / 私信事项的预览 */
+.gov-preview-chat { border-inline-start: var(--space-1) solid var(--info); }

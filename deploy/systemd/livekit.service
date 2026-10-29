@@ -1,0 +1,22 @@
+[Unit]
+Description=Commons LiveKit server (disabled until ROOM-1 gates pass)
+After=network-online.target
+Wants=network-online.target
+ConditionPathIsExecutable=/usr/local/bin/livekit-server
+
+[Service]
+Type=simple
+User=commons
+Group=commons
+EnvironmentFile=/etc/commons/env
+ExecStart=/usr/local/bin/livekit-server --config ${COMMONS_LIVEKIT_CONFIG}
+Restart=on-failure
+RestartSec=5s
+LimitNOFILE=65536
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

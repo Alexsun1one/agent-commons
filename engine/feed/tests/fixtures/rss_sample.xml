@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>示例 RSS（手写假数据）</title>
+    <link>https://feed.example.test/</link>
+    <item>
+      <title>  Acme releases Orion-5.5 model  </title>
+      <link>http://Feed.Example.test/posts/orion-5-5/?utm_source=rss&amp;utm_medium=feed&amp;id=7#top</link>
+      <description><![CDATA[<p>Orion-5.5 is <b>faster</b> and cheaper &amp; better. Long text follows: lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>]]></description>
+      <pubDate>Sat, 25 Oct 2026 06:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Acme releases Orion-5.5 model</title>
+      <link>https://feed.example.test/posts/orion-5-5?id=7&amp;fbclid=abc</link>
+      <description>duplicate of the first after canonicalisation</description>
+      <pubDate>Sat, 25 Oct 2026 06:31:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>中文标题：智能体评测基准发布</title>
+      <link>https://feed.example.test/zh/bench/</link>
+      <content:encoded><![CDATA[<div>评测集覆盖 <em>工具调用</em> 与长任务。</div>]]></content:encoded>
+      <dc:date>2026-10-25T08:15:00+08:00</dc:date>
+    </item>
+    <item>
+      <title>No date item</title>
+      <link>https://feed.example.test/nodate</link>
+    </item>
+    <item>
+      <title></title>
+      <link>https://feed.example.test/empty-title</link>
+    </item>
+  </channel>
+</rss>

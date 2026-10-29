@@ -1,0 +1,737 @@
+/* R13 TALK-1 · 讲堂（POLISH-B 精修）。数值只引用 tokens.css。无 :root，无色值字面量。 */
+
+.talk-page {
+  container: talks / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-width: 0;
+  color: var(--ink);
+}
+.talk-page [hidden] { display: none !important; }
+.talk-page h1,
+.talk-page h2,
+.talk-page h3,
+.talk-page p { margin: 0; }
+.talk-page h1 {
+  font-family: var(--display);
+  font-size: var(--text-display);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+}
+.talk-page h2 {
+  font-family: var(--display);
+  font-size: var(--text-section);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-section);
+  letter-spacing: var(--tracking-snug);
+}
+.talk-page h3 {
+  font-size: var(--text-item);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-item);
+}
+.talk-page a { color: inherit; text-decoration: none; }
+
+/* 页头 */
+.talk-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.talk-head-actions { display: flex; align-items: center; gap: var(--space-2); margin-left: auto; }
+.talk-head-copy { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+.talk-lead {
+  max-width: 42em;
+  color: var(--muted);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+.talk-sample { flex: none; }
+.talk-crumb-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.talk-crumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--muted);
+  font-size: var(--text-ui);
+  line-height: var(--leading-ui);
+}
+.talk-crumb a { color: var(--accent-ink); }
+.talk-crumb a:hover { text-decoration: underline; }
+.talk-crumb a:focus-visible { outline: none; border-radius: var(--radius-thumb); box-shadow: var(--ring-offset); }
+
+.talk-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--muted);
+  font-size: var(--text-meta);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-meta);
+}
+.talk-dot {
+  flex: none;
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--c, var(--accent));
+}
+.talk-page [data-cat="1"] { --c: var(--cat-1); }
+.talk-page [data-cat="2"] { --c: var(--cat-2); }
+.talk-page [data-cat="3"] { --c: var(--cat-3); }
+.talk-page [data-cat="5"] { --c: var(--cat-5); }
+
+.talk-filters { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+/* 封面 */
+.talk-cover-link {
+  position: relative;
+  display: block;
+  min-width: 0;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--sunk);
+}
+.talk-cover {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--sunk);
+  transition: transform var(--motion-base) var(--ease-out);
+}
+.talk-dur {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-thumb);
+  background: color-mix(in oklab, var(--ink) 78%, transparent);
+  color: var(--surface);
+  font: var(--weight-medium) var(--text-meta)/var(--leading-meta) var(--mono);
+  font-feature-settings: var(--num-features);
+}
+
+/* 场次网格：宽屏时头条占左上 2×2 */
+.talk-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+}
+@container talks (min-width: 560px) {
+  .talk-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .talk-grid[data-dir="all"] .is-featured { grid-column: 1 / -1; }
+  .talk-grid[data-dir="all"] .is-featured { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+  .talk-grid[data-dir="all"] .is-featured .talk-cover-link { aspect-ratio: auto; min-height: 100%; }
+}
+@container talks (min-width: 960px) {
+  .talk-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .talk-grid[data-dir="all"] .is-featured {
+    display: flex;
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  .talk-grid[data-dir="all"] .is-featured .talk-cover-link { aspect-ratio: 16 / 9; min-height: 0; }
+}
+.talk-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  overflow: hidden;
+  transition: transform var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast) var(--ease-out);
+}
+.talk-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); }
+.talk-card:hover .talk-cover { transform: scale(1.02); }
+.talk-card:focus-within { box-shadow: var(--shadow-2); }
+.talk-card-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  min-width: 0;
+}
+.talk-card h3 { text-wrap: balance; }
+.talk-card h3 a:hover,
+.talk-feat-title a:hover { color: var(--accent-ink); }
+.talk-card h3 a:focus-visible,
+.talk-feat-title a:focus-visible { outline: none; border-radius: var(--radius-thumb); box-shadow: var(--ring-offset); }
+.talk-summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: var(--text-ui);
+  line-height: var(--leading-ui);
+}
+.talk-card-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+  width: 100%;
+  margin-top: auto;
+  padding-top: var(--space-2);
+}
+.talk-count {
+  color: var(--muted);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  font-feature-settings: var(--num-features);
+  white-space: nowrap;
+}
+
+.is-featured .talk-card-body { gap: var(--space-3); padding: var(--space-5) var(--space-6) var(--space-6); }
+.talk-page .talk-feat-title {
+  font-size: var(--text-feature);
+  line-height: var(--leading-feature);
+  text-wrap: balance;
+}
+.is-featured .talk-summary { -webkit-line-clamp: 3; color: var(--ink-2); font-size: var(--text-body); line-height: var(--leading-body); }
+.talk-feat-learn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.talk-feat-learn li {
+  position: relative;
+  padding-left: var(--space-5);
+  color: var(--ink-2);
+  font-size: var(--text-ui);
+  line-height: var(--leading-ui);
+}
+.talk-feat-learn li::before {
+  content: '';
+  position: absolute;
+  left: var(--space-1);
+  top: calc(var(--leading-ui) / 2 - var(--space-1) / 2);
+  width: var(--space-2);
+  height: var(--space-1);
+  border-left: var(--line-2) solid var(--agent);
+  border-bottom: var(--line-2) solid var(--agent);
+  transform: rotate(-45deg) translateY(-25%);
+}
+.talk-feat-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-6);
+  width: 100%;
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: var(--line-1) solid var(--line-soft);
+}
+.talk-feat-foot .button.primary { margin-left: auto; }
+
+.talk-stats { display: flex; flex-wrap: wrap; gap: var(--space-5); }
+.talk-stats div { display: flex; flex-direction: column; min-width: 0; }
+.talk-stats b {
+  font-family: var(--display);
+  font-size: var(--text-section);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-section);
+  font-feature-settings: var(--num-features);
+  letter-spacing: var(--tracking-snug);
+}
+.talk-stats span { color: var(--muted); font-size: var(--text-meta); line-height: var(--leading-meta); }
+
+/* 讲者 */
+.talk-speaker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  min-height: var(--control-compact);
+  border-radius: var(--radius-control);
+  color: inherit;
+}
+.talk-speaker span { display: flex; flex-direction: column; min-width: 0; }
+.talk-speaker b {
+  font-size: var(--text-ui);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-ui);
+}
+.talk-speaker small { color: var(--muted); font-size: var(--text-meta); line-height: var(--leading-meta); }
+.talk-speaker:hover b { color: var(--accent-ink); }
+.talk-speaker .lk-person,.talk-speaker .lk-object,.talk-profile .lk-person,.talk-linked .lk-object,.talk-action .lk-person,.talk-q .lk-person{color:inherit;text-decoration:none}
+.talk-speaker .lk-person:hover,.talk-speaker .lk-object:hover,.talk-profile .lk-person:hover,.talk-linked .lk-object:hover,.talk-action .lk-person:hover,.talk-q .lk-person:hover{text-decoration:underline}
+.talk-speaker .lk-person:focus-visible,.talk-speaker .lk-object:focus-visible,.talk-profile .lk-person:focus-visible,.talk-linked .lk-object:focus-visible,.talk-action .lk-person:focus-visible,.talk-q .lk-person:focus-visible{outline:none;box-shadow:var(--ring-offset);border-radius:var(--radius-thumb)}
+.talk-speaker-inline { gap: var(--space-2); }
+.talk-speaker-inline small { white-space: nowrap; }
+.talk-letter {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--space-10);
+  height: var(--space-10);
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font: var(--weight-semibold) var(--text-item)/1 var(--display);
+}
+.talk-letter-lg {
+  width: calc(var(--space-12) + var(--space-2));
+  height: calc(var(--space-12) + var(--space-2));
+  font-size: var(--text-section);
+}
+
+/* 区块与下一场 */
+.talk-section { display: flex; flex-direction: column; gap: var(--space-3); min-width: 0; }
+.talk-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.talk-section-head span { color: var(--muted); font-size: var(--text-meta); font-feature-settings: var(--num-features); }
+.talk-next {
+  display: flex;
+  flex-direction: column;
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  overflow: hidden;
+}
+.talk-next a {
+  display: grid;
+  grid-template-columns: calc(var(--space-16) + var(--space-8)) minmax(0, 1fr) auto;
+  gap: var(--space-4);
+  align-items: center;
+  min-height: calc(var(--space-16) + var(--space-1));
+  padding: var(--space-3) var(--space-5);
+  border-top: var(--line-1) solid var(--line-soft);
+  transition: background-color var(--motion-fast) var(--ease-out);
+}
+.talk-next a:first-child { border-top: 0; }
+.talk-next a:hover { background: var(--slate-50); }
+.talk-next a:active { background: var(--slate-100); }
+.talk-next a:focus-visible { outline: none; box-shadow: inset 0 0 0 var(--line-2) var(--accent); }
+.talk-next time {
+  color: var(--accent-ink);
+  font: var(--weight-medium) var(--text-ui)/var(--leading-ui) var(--mono);
+  font-feature-settings: var(--num-features);
+  white-space: nowrap;
+}
+.talk-next span { display: flex; flex-direction: column; min-width: 0; }
+.talk-next b { font-size: var(--text-item); font-weight: var(--weight-semibold); line-height: var(--leading-item); }
+.talk-next small { color: var(--muted); font-size: var(--text-meta); line-height: var(--leading-meta); }
+.talk-next .button { pointer-events: none; }
+
+/* 回看 */
+.talk-watch-head { display: flex; flex-direction: column; gap: var(--space-3); min-width: 0; }
+.talk-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  color: var(--muted);
+  font-size: var(--text-ui);
+  line-height: var(--leading-ui);
+  font-feature-settings: var(--num-features);
+}
+.talk-meta-item { display: inline-flex; align-items: center; gap: var(--space-2); white-space: nowrap; }
+.talk-meta .talk-speaker b { color: var(--ink); }
+
+.talk-watch {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+.talk-linked{display:grid;gap:var(--space-2);padding-top:var(--space-4);border-top:var(--line-1) solid var(--line)}
+.talk-linked h2{font-size:var(--text-item);line-height:var(--leading-item)}
+.talk-linked p{margin:0;color:var(--ink-2);font-size:var(--text-ui);line-height:var(--leading-ui)}
+.talk-stage { display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; }
+.talk-side {
+  position: sticky;
+  top: calc(var(--space-16) + var(--space-4));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-2) var(--space-4) var(--space-4);
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+.talk-side .tabs { overflow-x: auto; scrollbar-width: none; }
+
+/* 舞台：未挂上播放器之前的封面 */
+.talk-player { min-width: 0; }
+.talk-wait {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-stage);
+  overflow: hidden;
+  background: var(--sunk);
+  box-shadow: var(--shadow-1);
+}
+.talk-wait-note {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-4);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-control);
+  background: color-mix(in oklab, var(--ink) 78%, transparent);
+  color: var(--surface);
+  font-size: var(--text-ui);
+  line-height: var(--leading-ui);
+}
+.talk-wait-retry { position: absolute; right: var(--space-4); bottom: var(--space-4); }
+
+/* 舞台：播放器（只在讲堂里改它的版式，媒体件本身不动） */
+.talk-player .med-player { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+.talk-player .med-frame { grid-area: 1 / 1; }
+.talk-player .med-frame--audio {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-stage);
+  background: var(--sunk);
+  box-shadow: var(--shadow-1);
+}
+.talk-player[data-cover="1"] .med-poster__title { display: none; }
+.talk-player .med-play-big svg { width: var(--space-6); height: var(--space-6); }
+.talk-player .med-play-big { transition: opacity var(--motion-fast) var(--ease-out); }
+.talk-player .med-player[data-state="playing"] .med-play-big { opacity: 0; }
+.talk-player .med-player[data-state="playing"] .med-frame:hover .med-play-big,
+.talk-player .med-player[data-state="playing"] .med-play-big:focus-visible { opacity: 1; }
+.talk-player .med-chapters { display: none; }
+.talk-player .med-player:is([data-state="poster"], [data-state="loading"], [data-state="ready"]) .med-captions { display: none; }
+.talk-player .med-captions {
+  grid-area: 1 / 1;
+  z-index: 3;
+  align-self: end;
+  justify-self: center;
+  max-width: calc(100% - var(--space-10));
+  margin-bottom: var(--space-5);
+  pointer-events: none;
+}
+.talk-player .med-cues {
+  align-items: center;
+  max-height: none;
+  padding: 0;
+  overflow: visible;
+  background: transparent;
+}
+.talk-player .med-cue { display: none; }
+.talk-player .med-cue[aria-current="true"] {
+  display: block;
+  width: auto;
+  min-height: 0;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-control);
+  background: color-mix(in oklab, var(--ink) 78%, transparent);
+  color: var(--surface);
+  font-size: var(--text-item);
+  line-height: var(--leading-item);
+  text-align: center;
+  pointer-events: auto;
+}
+
+.talk-learn-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+}
+.talk-learn {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: learn;
+}
+.talk-learn li {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  color: var(--ink-2);
+  font-size: var(--text-ui);
+  line-height: var(--leading-ui);
+  counter-increment: learn;
+}
+.talk-learn li::before {
+  content: counter(learn);
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--space-6);
+  height: var(--space-6);
+  border-radius: var(--radius-pill);
+  background: var(--agent-soft);
+  color: var(--agent-ink);
+  font: var(--weight-semibold) var(--text-meta)/1 var(--mono);
+}
+.talk-consent-line { color: var(--muted); font-size: var(--text-meta); line-height: var(--leading-meta); }
+.talk-note { color: var(--muted); font-size: var(--text-meta); line-height: var(--leading-meta); }
+
+.talk-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.talk-search {
+  flex: 1 1 10em;
+  min-width: 0;
+  height: var(--control-compact);
+  padding: 0 var(--space-3);
+  border: var(--line-1) solid var(--control-line);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--ink);
+  font: var(--text-ui)/var(--leading-ui) var(--sans);
+}
+.talk-search:focus { outline: none; border-color: var(--accent); box-shadow: var(--ring); }
+.talk-panel { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+.talk-script {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-height: min(60vh, calc(var(--space-16) * 8));
+  overflow: auto;
+  margin: 0 calc(var(--space-2) * -1);
+  padding: var(--space-1) var(--space-2);
+}
+.talk-script:focus-visible { outline: none; border-radius: var(--radius-control); box-shadow: inset 0 0 0 var(--line-2) var(--accent); }
+.talk-chapter,
+.talk-cue,
+.talk-point-jump {
+  width: 100%;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-out), transform var(--motion-fast) var(--ease-out);
+}
+.talk-chapter,
+.talk-cue { padding: var(--space-3); }
+.talk-chapter {
+  display: grid;
+  grid-template-columns: calc(var(--space-10) + var(--space-1)) minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: baseline;
+  min-height: var(--touch-target);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+.talk-chapter:hover,
+.talk-cue:hover,
+.talk-point-jump:hover { background: var(--slate-50); }
+.talk-chapter:active,
+.talk-cue:active,
+.talk-point-jump:active { transform: scale(.99); }
+.talk-chapter:focus-visible,
+.talk-cue:focus-visible,
+.talk-point-jump:focus-visible { outline: none; box-shadow: var(--ring-offset); }
+.talk-chapter[aria-current="true"],
+.talk-cue.is-current {
+  background: var(--accent-soft);
+  box-shadow: inset var(--line-2) 0 0 var(--accent);
+}
+.talk-chapter[aria-current="true"] { font-weight: var(--weight-medium); }
+.talk-cue {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-1) var(--space-3);
+}
+.talk-cue-time,
+.talk-time {
+  color: var(--muted);
+  font: var(--text-meta)/var(--leading-meta) var(--mono);
+  font-feature-settings: var(--num-features);
+  white-space: nowrap;
+}
+.talk-cue.is-current .talk-cue-time,
+.talk-chapter[aria-current="true"] .talk-time { color: var(--accent-ink); }
+.talk-cue-who { font-size: var(--text-meta); font-weight: var(--weight-medium); line-height: var(--leading-meta); }
+.talk-cue-text,
+.talk-cue-en { grid-column: 2; font-size: var(--text-ui); line-height: var(--leading-ui); }
+.talk-cue-en { color: var(--muted); }
+
+.talk-point {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-top: var(--line-1) solid var(--line-soft);
+}
+.talk-point:first-child { border-top: 0; }
+.talk-point-jump { flex: 1 1 auto; display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-2); min-width: 0; }
+.talk-point-jump b { font-size: var(--text-item); font-weight: var(--weight-semibold); line-height: var(--leading-item); }
+.talk-point p { color: var(--ink-2); font-size: var(--text-ui); line-height: var(--leading-ui); }
+.talk-point .button { flex: none; margin-top: var(--space-2); }
+.talk-list { display: flex; flex-direction: column; margin: 0; padding: 0; }
+.talk-q,
+.talk-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4) 0;
+  border-top: var(--line-1) solid var(--line-soft);
+  list-style: none;
+}
+.talk-q:first-child,
+.talk-action:first-child { border-top: 0; padding-top: var(--space-2); }
+.talk-q p,
+.talk-action p { font-size: var(--text-ui); line-height: var(--leading-ui); }
+.talk-q-top,
+.talk-action-top { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.talk-q-top b,
+.talk-action-top b { font-size: var(--text-ui); font-weight: var(--weight-medium); }
+.talk-inline-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+.talk-board-live {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 16 / 9;
+  min-height: calc(var(--space-16) * 3);
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  overflow: hidden;
+}
+.talk-board-still {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--sunk);
+}
+
+/* 准备页 */
+.talk-form { display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; max-width: 46em; }
+.talk-form .field,
+.talk-row .field { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+.talk-form-group { display: flex; flex-direction: column; gap: var(--space-3); }
+.talk-learn-fields { display: flex; flex-direction: column; gap: var(--space-3); margin: 0; padding: 0; border: 0; }
+.talk-learn-fields legend { margin-bottom: var(--space-3); }
+.talk-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) calc(var(--space-16) + var(--space-8)) auto;
+  gap: var(--space-3);
+  align-items: end;
+}
+.talk-templates { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.talk-total {
+  font-family: var(--display);
+  font-size: var(--text-section);
+  font-weight: var(--weight-semibold);
+  font-feature-settings: var(--num-features);
+  letter-spacing: var(--tracking-snug);
+}
+.talk-total[data-over="1"] { color: var(--danger-ink); }
+.talk-total-note { color: var(--danger-ink); font-size: var(--text-ui); line-height: var(--leading-ui); }
+.talk-form-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+.talk-save-note { color: var(--muted); font-size: var(--text-meta); line-height: var(--leading-meta); }
+
+.talk-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  max-width: 46em;
+  padding: var(--space-5);
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--sunk);
+}
+.talk-timer-clock {
+  font-family: var(--mono);
+  font-size: var(--text-stat);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-stat);
+  font-feature-settings: var(--num-features);
+  letter-spacing: var(--tracking-snug);
+}
+.talk-timer[data-over="1"] .talk-timer-clock { color: var(--danger-ink); }
+.talk-timer-note { min-height: var(--leading-ui); color: var(--ink-2); font-size: var(--text-ui); line-height: var(--leading-ui); }
+.talk-timer[data-over="1"] .talk-timer-note { color: var(--danger-ink); }
+.talk-timer-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+.talk-missing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  max-width: 36em;
+}
+.talk-empty-inline { color: var(--muted); font-size: var(--text-ui); line-height: var(--leading-ui); }
+.talk-profile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+.talk-profile .talk-head-copy { flex: 1 1 16em; }
+
+@media (max-width: 1100px) {
+  .talk-watch { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  .talk-stage { display: contents; }
+  .talk-player { order: 1; }
+  .talk-side { order: 2; position: static; }
+  .talk-learn-box { order: 3; }
+  .talk-consent-line { order: 4; }
+}
+@media (max-width: 800px) {
+  .talk-page { gap: var(--space-5); }
+  .talk-page h1 { font-size: var(--text-feature); line-height: var(--leading-feature); }
+  .talk-head { align-items: flex-start; }
+  .talk-feat-learn { display: none; }
+  .talk-feat-foot .button.primary { width: 100%; margin-left: 0; min-height: var(--control-large); }
+  .talk-stats b { font-size: var(--text-item); line-height: var(--leading-item); }
+  .talk-learn { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+  .talk-next a { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-1) var(--space-3); padding: var(--space-3) var(--space-4); }
+  .talk-next time { grid-column: 1 / -1; }
+  .talk-row { grid-template-columns: minmax(0, 1fr); }
+  .talk-script { max-height: min(56vh, calc(var(--space-16) * 7)); }
+  .talk-timer-clock { font-size: var(--text-display); line-height: var(--leading-display); }
+  .talk-player .med-cue[aria-current="true"] { font-size: var(--text-ui); line-height: var(--leading-ui); }
+  .talk-player .med-captions { margin-bottom: var(--space-3); max-width: calc(100% - var(--space-6)); }
+  .talk-meta { gap: var(--space-1) var(--space-3); }
+  .talk-meta .talk-speaker small { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .talk-card,
+  .talk-cover,
+  .talk-next a,
+  .talk-chapter,
+  .talk-cue,
+  .talk-point-jump {
+    transition: background-color var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast) var(--ease-out), color var(--motion-fast) var(--ease-out);
+  }
+  .talk-card:hover,
+  .talk-chapter:active,
+  .talk-cue:active,
+  .talk-point-jump:active { transform: none; }
+  .talk-card:hover .talk-cover { transform: none; }
+}

@@ -1,0 +1,28 @@
+[Unit]
+Description=Commons background worker
+After=commons-api.service
+Requires=commons-api.service
+
+[Service]
+Type=simple
+User=commons
+Group=commons
+WorkingDirectory=/opt/commons/current/server
+EnvironmentFile=/etc/commons/env
+ExecStart=/opt/commons/venv/bin/python -m app.worker
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=60s
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

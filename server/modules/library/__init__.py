@@ -1,0 +1,2 @@
+"""Structured resource library module."""
+

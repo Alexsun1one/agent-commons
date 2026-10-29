@@ -1,0 +1,58 @@
+/* 主页面页首：标题 + 一级页签 + 二级页签，所有主页面共用一套位置与字号。
+   页首单独占一个 .page，模块重绘自己的 .page 时不会把它冲掉。 */
+.page.hub-page-head{padding-bottom:0;}
+.page.hub-page-head+.page{padding-top:0;}
+.hub-head{margin:0 0 var(--space-6);}
+.hub-head.is-tabs-only{margin-bottom:var(--space-5);}
+.hub-title{font-size:var(--text-display);line-height:var(--leading-display);letter-spacing:-.03em;margin:0 0 var(--space-3);}
+.hub-tabs{display:flex;gap:var(--space-6);border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:hidden;scrollbar-width:none;}
+.hub-tabs::-webkit-scrollbar,.hub-sub::-webkit-scrollbar{display:none;}
+.hub-tab{display:inline-flex;align-items:center;min-height:var(--touch-target);margin-bottom:-1px;border-bottom:2px solid transparent;font-size:var(--text-item);line-height:var(--leading-item);color:var(--muted);white-space:nowrap;flex-shrink:0;transition:color var(--motion-fast) var(--ease-out),border-color var(--motion-fast) var(--ease-out);}
+.hub-tab:hover{color:var(--ink);}
+.hub-tab.is-current{color:var(--ink);font-weight:var(--weight-semibold);border-bottom-color:var(--accent);}
+.hub-sub{display:flex;gap:var(--space-2);padding-top:var(--space-3);overflow-x:auto;scrollbar-width:none;}
+.hub-sub-link{display:inline-flex;align-items:center;min-height:var(--control-compact);padding:0 var(--space-3);border-radius:var(--radius-pill);font-size:var(--text-ui);line-height:var(--leading-ui);color:var(--muted);white-space:nowrap;flex-shrink:0;transition:color var(--motion-fast) var(--ease-out),background-color var(--motion-fast) var(--ease-out);}
+.hub-sub-link:hover{color:var(--ink);background:var(--slate-100);}
+.hub-sub-link.is-current{color:var(--accent-ink);background:var(--blue-100);font-weight:var(--weight-semibold);}
+.hub-tab:focus-visible,.hub-sub-link:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:var(--radius-thumb);}
+@media(max-width:760px){
+.hub-head{margin-bottom:var(--space-4);}
+.hub-title{font-size:var(--text-feature);line-height:var(--leading-feature);margin-bottom:var(--space-2);}
+.hub-tabs{gap:var(--space-5);margin:0 calc(-1 * var(--space-4));padding:0 var(--space-4);scroll-padding:0 var(--space-4);}
+.hub-sub{margin:0 calc(-1 * var(--space-4));padding-left:var(--space-4);padding-right:var(--space-4);}
+.hub-sub-link{min-height:var(--touch-target);}
+}
+@media(max-width:359px){
+.hub-tabs,.hub-sub{margin:0 calc(-1 * var(--space-3));padding-left:var(--space-3);padding-right:var(--space-3);}
+}
+@media(prefers-reduced-motion:reduce){.hub-tab,.hub-sub-link{transition:none;}}
+
+/* R17-F · 真实模式的实战工坊、合作机会、共同项目 */
+.hubp{display:grid;gap:var(--space-5);align-content:start}
+.hubp-head{display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);flex-wrap:wrap}
+.hubp-head p{margin:0;color:var(--muted);font-size:var(--text-ui);line-height:var(--leading-ui)}
+.hubp-actions,.hubp-filters,.hubp-card-actions,.hubp-kind{display:flex;gap:var(--space-2);flex-wrap:wrap}
+.hubp-note{margin:0;padding:var(--space-3) var(--space-4);border-left:var(--line-2) solid var(--info);background:var(--info-soft);color:var(--info-ink);font-size:var(--text-ui)}
+.hubp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(var(--space-16) * 4),1fr));gap:var(--space-4)}
+.hubp-card{display:grid;align-content:start;gap:var(--space-2);min-width:0;padding:var(--space-4);border:var(--line-1) solid var(--line);border-radius:var(--radius-panel);background:var(--surface)}
+.hubp-card h2{margin:0;font-size:var(--text-item);line-height:var(--leading-item)}
+.hubp-card h2 a{color:var(--ink);text-decoration:none}
+.hubp-card h2 a:hover{color:var(--accent-ink)}
+.hubp-card p{margin:0;color:var(--ink-2);font-size:var(--text-ui);line-height:var(--leading-ui);overflow-wrap:anywhere}
+.hubp-card .hubp-facts{display:flex;gap:var(--space-3);flex-wrap:wrap;color:var(--muted);font-size:var(--text-meta)}
+.hubp-card .hubp-meta{color:var(--muted);font-size:var(--text-meta)}
+.hubp-card-actions{align-items:center;margin-top:var(--space-1)}
+.hubp-org{color:var(--accent-ink);font-size:var(--text-ui)}
+.hubp-works{display:grid;margin:0;padding:0;list-style:none}
+.hubp-works li{display:grid;gap:var(--space-1);padding:var(--space-2) 0;border-top:var(--line-1) solid var(--line-soft)}
+.hubp-works small,.hubp-rows small{color:var(--muted);font-size:var(--text-meta)}
+.hubp-section{display:grid;gap:var(--space-3)}
+.hubp-section h2{margin:0;font-size:var(--text-section)}
+.hubp-rows{display:grid;margin:0;padding:0;list-style:none}
+.hubp-rows li{display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);padding:var(--space-3) 0;border-bottom:var(--line-1) solid var(--line-soft)}
+.hubp-rows li>div{display:grid;gap:var(--space-1);min-width:0}
+.hubp-rows li>div>.pill{justify-self:start}
+.hubp-rows h3{margin:0;font-size:var(--text-item);line-height:var(--leading-item)}
+.hubp-rows h3 a{color:var(--ink);text-decoration:none}
+.hubp-rows p{margin:0;color:var(--ink-2);font-size:var(--text-ui);line-height:var(--leading-ui)}
+@media(max-width:760px){.hubp-head{align-items:flex-start}.hubp-rows li{flex-direction:column;align-items:flex-start}}

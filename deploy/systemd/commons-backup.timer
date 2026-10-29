@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Commons backup every hour
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+RandomizedDelaySec=5m
+Unit=commons-backup.service
+
+[Install]
+WantedBy=timers.target

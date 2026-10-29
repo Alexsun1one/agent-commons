@@ -1,0 +1,1420 @@
+/* R13 VIZ-1 · 群的走向（#/insights）
+ * 只引用 tokens.css 变量，不写 :root，无暖色。话题层 = --cat-*（「其他」= --cat-10 灰），选中 / 人做的事 = 品牌蓝，
+ * 重力线和注释引线 = 层色混墨。类名与 data 属性全部 ins- 前缀；和年轮（RINGS-2）、知识地图（KNET-3）同一家：
+ * 同样的指标条、来源徽章、深色浮层、纸色舞台。
+ */
+
+.ins,
+.ins * { box-sizing: border-box; }
+
+.ins {
+  display: grid;
+  gap: var(--space-6);
+  min-width: 0;
+  padding-bottom: var(--space-8);
+  color: var(--ink);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  font-feature-settings: var(--num-features);
+}
+
+.ins p,
+.ins dl,
+.ins dd,
+.ins h1,
+.ins h2,
+.ins h3,
+.ins figure,
+.ins ol,
+.ins ul { margin: 0; }
+
+.ins ol,
+.ins ul { padding: 0; list-style: none; }
+
+.ins [hidden] { display: none !important; }
+
+.ins-sr,
+.ins-ladder-list {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.ins-probe {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ---------- 页头 ---------- */
+
+.ins-head {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.ins-head-copy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.ins-lede {
+  color: var(--ink-2);
+  font-size: var(--text-ui);
+  line-height: var(--leading-ui);
+}
+
+.ins-src-note {
+  color: var(--muted);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+}
+
+.ins-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--space-6);
+  padding: 0 var(--space-2);
+  border: var(--line-1) solid transparent;
+  border-radius: var(--radius-pill);
+  font: var(--weight-semibold) var(--text-micro)/1 var(--sans);
+  letter-spacing: var(--tracking-label);
+  white-space: nowrap;
+}
+
+.ins-badge.is-sample {
+  border-color: var(--notice-line);
+  background: var(--notice-soft);
+  color: var(--notice-ink);
+}
+
+.ins-badge.is-real {
+  background: var(--sunk);
+  color: var(--muted);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0;
+}
+
+.ins-badge.is-real::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+/* 指标条：和知识地图同一种样式，多一行口径 */
+.ins-metrics {
+  display: flex;
+  margin: 0;
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  overflow: hidden;
+}
+
+.ins-metric {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  min-width: 0;
+  max-width: 228px;
+  padding: var(--space-2) var(--space-4) var(--space-3);
+}
+
+.ins-metric + .ins-metric { border-left: var(--line-1) solid var(--line-soft); }
+
+.ins-metric dt {
+  color: var(--muted);
+  font: var(--weight-medium) var(--text-micro)/var(--leading-micro) var(--sans);
+  white-space: nowrap;
+}
+
+.ins-metric-n {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.ins-metric-v {
+  color: var(--ink);
+  font: var(--weight-semibold) var(--text-feature)/var(--leading-feature) var(--sans);
+  font-feature-settings: var(--num-features);
+  letter-spacing: var(--tracking-tight);
+}
+
+.ins-metric[data-empty] .ins-metric-v { color: var(--faint); }
+
+.ins-metric-u {
+  color: var(--muted);
+  font: var(--weight-medium) var(--text-ui)/1 var(--sans);
+}
+
+.ins-metric-s {
+  overflow: hidden;
+  color: var(--faint);
+  font: var(--weight-regular) var(--text-micro)/var(--leading-micro) var(--sans);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ins-delta {
+  margin-left: var(--space-2);
+  color: var(--faint);
+  font: var(--weight-medium) var(--text-micro)/1 var(--mono);
+  font-feature-settings: var(--num-features);
+  white-space: nowrap;
+}
+
+.ins-delta[data-good="good"] { color: var(--success-ink); }
+.ins-delta[data-good="bad"] { color: var(--ink-2); }
+
+/* ---------- 卡片 ---------- */
+
+.ins-card {
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+  padding: var(--space-6);
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-stage);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.ins-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-6);
+}
+
+.ins-card-copy {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+  max-width: 720px;
+}
+
+.ins-card-copy h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font: var(--weight-semibold) var(--text-section)/var(--leading-section) var(--display);
+  letter-spacing: var(--tracking-snug);
+  color: var(--ink);
+}
+
+.ins-card-copy p {
+  color: var(--muted);
+  font-size: var(--text-ui);
+  line-height: var(--leading-ui);
+}
+
+.ins-card-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ins-hint {
+  color: var(--faint);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  white-space: nowrap;
+}
+
+.ins-foot-note {
+  color: var(--faint);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+}
+
+.ins-hatch-key {
+  display: inline-block;
+  width: var(--space-3);
+  height: var(--space-3);
+  margin-right: var(--space-1);
+  vertical-align: -2px;
+  border-radius: var(--radius-thumb);
+  background: repeating-linear-gradient(45deg, var(--slate-400) 0 1px, var(--surface) 1px 4px);
+  box-shadow: inset 0 0 0 var(--line-1) var(--line);
+}
+
+/* ---------- 空态 · 出错 ---------- */
+
+.ins-empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  padding: var(--space-6);
+  border: var(--line-1) dashed var(--line-strong);
+  border-radius: var(--radius-panel);
+  background: var(--paper);
+  color: var(--muted);
+  font-size: var(--text-ui);
+  line-height: var(--leading-ui);
+}
+
+.ins-empty p { flex: 1 1 240px; }
+
+.ins-empty-mark {
+  flex: none;
+  width: var(--space-5);
+  height: var(--space-5);
+  border: var(--line-2) dashed var(--slate-300);
+  border-radius: 50%;
+}
+
+.ins-empty.is-error {
+  border-style: solid;
+  border-color: var(--danger-line);
+  background: var(--danger-soft);
+  color: var(--danger-ink);
+}
+
+.ins-empty.is-error .ins-empty-mark { border-color: var(--danger-line); }
+
+/* ---------- 话题流图 ---------- */
+
+.ins-stage {
+  position: relative;
+  min-width: 0;
+  border: var(--line-1) solid var(--line-soft);
+  border-radius: var(--radius-panel);
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.ins-scroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.ins-canvas {
+  position: relative;
+  min-width: 0;
+}
+
+.ins-stream {
+  display: block;
+  overflow: visible;
+  outline: none;
+  cursor: crosshair;
+}
+
+.ins-stream:focus-visible { box-shadow: inset 0 0 0 var(--line-2) var(--accent); border-radius: var(--radius-panel); }
+
+.ins-leaders {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ins-notes {
+  position: absolute;
+  inset: 0 0 auto 0;
+  pointer-events: none;
+}
+
+.ins-scroll-hint { display: none; }
+
+.ins-layer {
+  fill: color-mix(in oklab, var(--c) 72%, var(--surface));
+  stroke: var(--surface);
+  stroke-width: 1;
+  stroke-opacity: .9;
+  cursor: pointer;
+  transition: fill var(--motion-base) var(--ease-out), opacity var(--motion-base) var(--ease-out);
+}
+
+.ins-stream[data-hover="1"] .ins-layer:not(.is-hover) { opacity: .8; }
+.ins-layer.is-hover { fill: color-mix(in oklab, var(--c) 94%, var(--surface)); }
+.ins-stream[data-peek] .ins-layer:not(.is-peek) { fill: color-mix(in oklab, var(--c) 30%, var(--surface)); }
+.ins-stream[data-hl] .ins-layer:not(.is-hl) { fill: color-mix(in oklab, var(--c) 16%, var(--surface)); }
+.ins-stream[data-hl] .ins-layer.is-hl { fill: var(--c); }
+
+.ins-hatch {
+  fill: url(#ins-hatch);
+  pointer-events: none;
+}
+
+.ins-hatch-bg { fill: color-mix(in oklab, var(--surface) 45%, transparent); }
+
+.ins-hatch-line {
+  stroke: color-mix(in oklab, var(--slate-700) 45%, transparent);
+  stroke-width: 1.4;
+}
+
+.ins-layer-label {
+  font: var(--weight-semibold) var(--text-meta)/1 var(--sans);
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+  transition: opacity var(--motion-base) var(--ease-out);
+}
+
+.ins-layer-label.is-light { fill: var(--surface); }
+.ins-layer-label.is-dark { fill: var(--slate-900); }
+.ins-stream[data-hl] .ins-layer-label:not(.is-hl) { opacity: 0; }
+
+.ins-grid-line {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+
+.ins-grid-line.is-base {
+  stroke: var(--line-strong);
+  stroke-dasharray: none;
+}
+
+.ins-axis-month {
+  font: var(--weight-medium) var(--text-meta)/1 var(--sans);
+  fill: var(--muted);
+  text-anchor: middle;
+}
+
+.ins-axis-tick { fill: var(--slate-300); }
+
+.ins-axis-tick.is-partial {
+  fill: var(--paper);
+  stroke: var(--slate-400);
+  stroke-width: 1;
+}
+
+.ins-axis-x,
+.ins-axis-y {
+  font: var(--weight-regular) var(--text-micro)/1 var(--mono);
+  fill: var(--faint);
+}
+
+.ins-axis-x { text-anchor: middle; }
+.ins-axis-x.is-start { text-anchor: start; }
+.ins-axis-x.is-end { text-anchor: end; }
+
+.ins-axis-y {
+  text-anchor: end;
+  dominant-baseline: central;
+}
+
+.ins-axis-y.is-in {
+  text-anchor: start;
+  dominant-baseline: auto;
+}
+
+.ins-guide {
+  stroke: var(--ink-2);
+  stroke-opacity: .5;
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  pointer-events: none;
+}
+
+/* 转折点：小圆点 + 光晕，跟注释卡同色 */
+.ins-mark {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ins-pop var(--motion-layout) var(--ease-spring) both;
+  pointer-events: none;
+}
+
+.ins-mark-halo { fill: color-mix(in oklab, var(--c) 24%, transparent); }
+
+.ins-mark-dot {
+  fill: var(--surface);
+  stroke: color-mix(in oklab, var(--c) 70%, var(--ink));
+  stroke-width: 2;
+}
+
+.ins-rope {
+  fill: none;
+  stroke: color-mix(in oklab, var(--c) 52%, var(--ink));
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-opacity: .85;
+}
+
+.ins-eyelet {
+  fill: var(--surface);
+  stroke: color-mix(in oklab, var(--c) 52%, var(--ink));
+  stroke-width: 1.25;
+}
+
+.ins-note {
+  position: absolute;
+  top: var(--space-3);
+  display: grid;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-4);
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+  text-align: left;
+  pointer-events: auto;
+  cursor: pointer;
+  animation: ins-rise var(--motion-enter) var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * var(--stagger) * 2);
+  transition: transform var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast) var(--ease-out), border-color var(--motion-fast) var(--ease-out), background-color var(--motion-fast) var(--ease-out);
+}
+
+.ins-note::before {
+  content: '';
+  position: absolute;
+  left: var(--space-2);
+  top: var(--space-2);
+  bottom: var(--space-2);
+  width: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--c);
+}
+
+.ins-note:hover {
+  transform: translateY(-1px);
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-2);
+}
+
+.ins-note:active {
+  transform: scale(.98);
+  transition-duration: var(--motion-fast);
+}
+
+.ins-note:focus-visible {
+  outline: none;
+  box-shadow: var(--ring-offset);
+}
+
+.ins-note[aria-pressed="true"] {
+  border-color: color-mix(in oklab, var(--c) 45%, var(--line));
+  background: color-mix(in oklab, var(--c) 7%, var(--surface));
+}
+
+.ins-note-k {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--muted);
+  font: var(--weight-medium) var(--text-micro)/var(--leading-micro) var(--sans);
+}
+
+.ins-note-arrow {
+  width: 8px;
+  height: 7px;
+  background: color-mix(in oklab, var(--c) 70%, var(--ink));
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.ins-note[data-dir="down"] .ins-note-arrow { transform: rotate(180deg); }
+
+.ins-note-t {
+  font: var(--weight-semibold) var(--text-ui)/var(--leading-ui) var(--sans);
+  color: var(--ink);
+}
+
+.ins-note-m {
+  color: var(--muted);
+  font: var(--weight-regular) var(--text-micro)/var(--leading-micro) var(--sans);
+  font-feature-settings: var(--num-features);
+}
+
+.ins-note-empty {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  right: var(--space-4);
+  max-width: 420px;
+  padding: var(--space-2) var(--space-3);
+  border: var(--line-1) dashed var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+}
+
+.ins-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.ins-chip i,
+.ins-tip-rows i,
+.ins-role-label i {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-thumb);
+  background: var(--c);
+}
+
+/* ---------- 浮层（和年轮同一种深色浮层） ---------- */
+
+.ins-tip {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  top: 0;
+  display: grid;
+  gap: var(--space-1);
+  min-width: 204px;
+  max-width: min(268px, calc(100vw - var(--space-8)));
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border-radius: var(--radius-control);
+  background: var(--slate-900);
+  color: var(--slate-25);
+  font: var(--weight-regular) var(--text-meta)/var(--leading-meta) var(--sans);
+  box-shadow: var(--shadow-2);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--motion-fast) var(--ease-out);
+}
+
+.ins-tip[data-show] { opacity: 1; }
+
+.ins-tip-t {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-1);
+  border-bottom: var(--line-1) solid color-mix(in oklab, var(--slate-25) 12%, transparent);
+  font: var(--weight-semibold) var(--text-meta)/var(--leading-meta) var(--mono);
+  color: var(--slate-25);
+}
+
+.ins-tip-t span {
+  color: var(--slate-400);
+  font: var(--weight-regular) var(--text-micro)/var(--leading-micro) var(--sans);
+}
+
+.ins-tip-rows {
+  display: grid;
+  gap: 1px;
+}
+
+.ins-tip-rows li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2);
+  margin-inline: calc(var(--space-1) * -1);
+  padding: 1px var(--space-1);
+  border-radius: var(--radius-thumb);
+  color: var(--slate-400);
+}
+
+.ins-tip-rows span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ins-tip-rows b {
+  font: var(--weight-regular) var(--text-meta)/var(--leading-meta) var(--mono);
+  font-feature-settings: var(--num-features);
+  color: var(--slate-300);
+}
+
+.ins-tip-rows li.is-top { color: var(--slate-100); }
+
+.ins-tip-rows li.is-top b {
+  font-weight: var(--weight-semibold);
+  color: var(--slate-25);
+}
+
+.ins-tip-rows li.is-on { background: color-mix(in oklab, var(--slate-25) 12%, transparent); }
+
+.ins-tip-rows i.is-line {
+  width: 10px;
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--slate-500);
+}
+
+.ins-tip-rows i.is-line.is-sel { background: var(--blue-300); }
+
+.ins-tip-m {
+  color: var(--slate-400);
+  font-size: var(--text-micro);
+  line-height: var(--leading-micro);
+}
+
+/* ---------- 群体成长 ---------- */
+
+.ins-cohort-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.ins-chip-n {
+  margin-left: 2px;
+  color: var(--faint);
+  font-weight: var(--weight-regular);
+}
+
+.chip[aria-pressed="true"] .ins-chip-n { color: color-mix(in oklab, var(--accent-ink) 70%, var(--surface)); }
+
+.ins-cohort-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-8);
+}
+
+.ins-retain {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.ins-callout {
+  color: var(--ink);
+  font: var(--weight-medium) var(--text-item)/var(--leading-item) var(--sans);
+}
+
+.ins-callout b {
+  color: var(--accent-ink);
+  font: var(--weight-semibold) var(--text-feature)/1 var(--sans);
+  font-feature-settings: var(--num-features);
+  letter-spacing: var(--tracking-tight);
+}
+
+.ins-callout-sub {
+  margin-bottom: var(--space-3);
+  color: var(--muted);
+  font-size: var(--text-ui);
+  line-height: var(--leading-ui);
+}
+
+.ins-chart { position: relative; min-width: 0; }
+
+.ins-retain-svg,
+.ins-role-svg {
+  display: block;
+  overflow: visible;
+  outline: none;
+}
+
+.ins-retain-svg:focus-visible,
+.ins-role-svg:focus-visible {
+  box-shadow: 0 0 0 var(--line-2) var(--accent);
+  border-radius: var(--radius-thumb);
+}
+
+.ins-retain-line {
+  fill: none;
+  stroke: var(--slate-300);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke var(--motion-fast) var(--ease-out), stroke-width var(--motion-fast) var(--ease-out);
+}
+
+.ins-retain-line.is-peek {
+  stroke: var(--slate-500);
+  stroke-width: 2;
+}
+
+.ins-retain-line.is-on {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+
+.ins-retain-area { fill: url(#ins-retain-fill); pointer-events: none; }
+
+.ins-stop-a {
+  stop-color: var(--accent);
+  stop-opacity: .16;
+}
+
+.ins-stop-b {
+  stop-color: var(--accent);
+  stop-opacity: 0;
+}
+
+.ins-gap {
+  fill: none;
+  stroke: var(--slate-300);
+  stroke-width: 1.25;
+  stroke-dasharray: 2 3;
+}
+
+.ins-retain-dot {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+
+.ins-retain-dot.is-key {
+  fill: var(--accent);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.ins-retain-key {
+  font: var(--weight-semibold) var(--text-meta)/1 var(--mono);
+  fill: var(--accent-ink);
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 3;
+}
+
+.ins-end-label {
+  font: var(--weight-medium) var(--text-micro)/1 var(--sans);
+  fill: var(--faint);
+  dominant-baseline: central;
+}
+
+.ins-end-label {
+  opacity: 0;
+  transition: opacity var(--motion-fast) var(--ease-out);
+}
+
+.ins-end-label.is-peek { opacity: 1; fill: var(--ink-2); }
+
+.ins-end-label.is-on {
+  opacity: 1;
+  fill: var(--accent-ink);
+  font-weight: var(--weight-semibold);
+}
+
+.ins-ref {
+  stroke: var(--line-strong);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.ins-ref-label {
+  font: var(--weight-medium) var(--text-micro)/1 var(--sans);
+  fill: var(--muted);
+  text-anchor: middle;
+}
+
+/* 成长阶梯 */
+.ins-ladder {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  padding-left: var(--space-8);
+  border-left: var(--line-1) solid var(--line-soft);
+}
+
+.ins-sub-head {
+  display: grid;
+  gap: 2px;
+}
+
+.ins-sub-head h3 {
+  font: var(--weight-semibold) var(--text-item)/var(--leading-item) var(--sans);
+  color: var(--ink);
+}
+
+.ins-sub-head p {
+  color: var(--muted);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+}
+
+.ins-ladder-chart {
+  position: relative;
+  min-width: 0;
+}
+
+.ins-ladder-svg,
+.ins-ladder-ropes {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.ins-ladder-ropes { pointer-events: none; }
+
+.ins-step-label {
+  font: var(--weight-medium) var(--text-ui)/1 var(--sans);
+  fill: var(--ink-2);
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+.ins-step-value {
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  font: var(--weight-medium) var(--text-meta)/1 var(--sans);
+  font-feature-settings: var(--num-features);
+  fill: var(--muted);
+  text-anchor: end;
+}
+
+.ins-step-value.is-none { fill: var(--faint); font-weight: var(--weight-regular); }
+
+.ins-step-track { fill: var(--sunk); }
+
+.ins-step-iqr {
+  fill: color-mix(in oklab, var(--c) 42%, var(--surface));
+  transition: x var(--motion-stage) var(--ease-out), width var(--motion-stage) var(--ease-out);
+}
+
+.ins-step-none {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.ins-step-other {
+  stroke: var(--slate-400);
+  stroke-width: 2;
+  stroke-linecap: round;
+  cursor: help;
+}
+
+.ins-step-other.is-self { visibility: hidden; }
+
+.ins-ladder-rope {
+  fill: none;
+  stroke: color-mix(in oklab, var(--ink) 34%, transparent);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+}
+
+.ins-step-dot {
+  fill: var(--surface);
+  stroke: color-mix(in oklab, var(--c) 78%, var(--ink));
+  stroke-width: 2.5;
+}
+
+/* ---------- 角色变化：左边读数（照年轮的「当前读数」），右边一把尺上的三条线 ---------- */
+
+.ins-roles {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-8);
+}
+
+.ins-role-stats {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.ins-role-when {
+  color: var(--muted);
+  font: var(--weight-medium) var(--text-meta)/var(--leading-meta) var(--sans);
+  font-feature-settings: var(--num-features);
+}
+
+.ins-role {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-4);
+  border-left: var(--line-2) solid var(--c);
+  border-radius: 0 var(--radius-control) var(--radius-control) 0;
+  background: color-mix(in oklab, var(--c) 5%, var(--surface));
+}
+
+.ins-role-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ink-2);
+  font: var(--weight-medium) var(--text-ui)/var(--leading-ui) var(--sans);
+}
+
+.ins-role-label i { display: none; }
+
+.ins-role-big {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.ins-role-big b {
+  color: var(--ink);
+  font: var(--weight-semibold) var(--text-feature)/var(--leading-feature) var(--sans);
+  font-feature-settings: var(--num-features);
+  letter-spacing: var(--tracking-tight);
+}
+
+.ins-role-u {
+  color: var(--muted);
+  font: var(--weight-medium) var(--text-ui)/1 var(--sans);
+}
+
+.ins-role-meta {
+  color: var(--faint);
+  font: var(--weight-regular) var(--text-micro)/var(--leading-micro) var(--sans);
+  font-feature-settings: var(--num-features);
+}
+
+.ins-roles-chart { padding-top: var(--space-1); }
+
+.ins-role-line {
+  fill: none;
+  stroke: var(--c);
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ins-role-dot {
+  fill: var(--surface);
+  stroke: var(--c);
+  stroke-width: 1.75;
+  transition: r var(--motion-fast) var(--ease-out), fill var(--motion-fast) var(--ease-out);
+}
+
+.ins-role-dot.is-on {
+  r: 5px;
+  fill: var(--c);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.ins-role-end {
+  font: var(--weight-medium) var(--text-meta)/1 var(--sans);
+  fill: color-mix(in oklab, var(--c) 70%, var(--ink));
+  dominant-baseline: central;
+}
+
+.ins-role-end-v {
+  font-family: var(--mono);
+  font-weight: var(--weight-semibold);
+}
+
+.ins-role-none {
+  font: var(--weight-regular) var(--text-micro)/1 var(--sans);
+  fill: var(--faint);
+  text-anchor: middle;
+}
+
+/* ---------- 重力线演示 ---------- */
+
+.ins-readout {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--space-6);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--sunk);
+  color: var(--faint);
+  font: var(--weight-regular) var(--text-micro)/1 var(--mono);
+  font-feature-settings: var(--num-features);
+  white-space: nowrap;
+  transition: background-color var(--motion-fast) var(--ease-out), color var(--motion-fast) var(--ease-out);
+}
+
+.ins-readout[data-moving] {
+  background: var(--agent-soft);
+  color: var(--agent-ink);
+}
+
+.ins-demo {
+  position: relative;
+  height: 300px;
+  border: var(--line-1) solid var(--line-soft);
+  border-radius: var(--radius-panel);
+  background-color: var(--paper);
+  background-image: radial-gradient(circle, color-mix(in oklab, var(--slate-400) 40%, transparent) 1px, transparent 1.4px);
+  background-size: var(--space-6) var(--space-6);
+  background-position: var(--space-3) var(--space-3);
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.ins-demo-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.ins .ins-node {
+  position: absolute;
+  left: calc(var(--touch-target) / -2);
+  top: calc(var(--touch-target) / -2);
+  display: grid;
+  place-items: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.ins-node-dot {
+  width: 18px;
+  height: 18px;
+  border: 4px solid var(--surface);
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 0 var(--line-1) color-mix(in oklab, var(--c) 45%, transparent), var(--shadow-1);
+  transition: transform var(--motion-base) var(--ease-spring), box-shadow var(--motion-fast) var(--ease-out);
+}
+
+.ins-node-label {
+  position: absolute;
+  top: calc(100% - var(--space-2));
+  left: 50%;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--paper) 88%, transparent);
+  color: var(--ink-2);
+  font: var(--weight-medium) var(--text-meta)/var(--leading-meta) var(--sans);
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.ins-node:hover .ins-node-dot {
+  transform: scale(1.18);
+  box-shadow: 0 0 0 var(--line-1) color-mix(in oklab, var(--c) 45%, transparent), var(--shadow-2);
+}
+
+.ins-node:active .ins-node-dot,
+.ins-node[data-drag] .ins-node-dot {
+  transform: scale(.92);
+  transition-duration: var(--motion-fast);
+}
+
+.ins .ins-node[data-drag] { cursor: grabbing; }
+
+.ins .ins-node:focus-visible { outline: none; }
+.ins-node:focus-visible .ins-node-dot { box-shadow: var(--ring-offset); }
+
+/* ---------- 「?」说明：默认收起，一行 ---------- */
+
+.ins-more {
+  min-width: 0;
+  color: var(--muted);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+}
+
+.ins-more > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control-compact);
+  padding: 0 var(--space-2) 0 var(--space-1);
+  margin-left: calc(-1 * var(--space-1));
+  border-radius: var(--radius-pill);
+  color: var(--muted);
+  list-style: none;
+  cursor: pointer;
+  transition: color var(--motion-fast) var(--ease-out), background-color var(--motion-fast) var(--ease-out);
+}
+
+.ins-more > summary::-webkit-details-marker { display: none; }
+
+.ins-more > summary i {
+  display: inline-grid;
+  place-items: center;
+  width: var(--space-5);
+  height: var(--space-5);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 var(--line-1) var(--line-strong);
+  font: var(--weight-semibold) var(--text-micro)/1 var(--sans);
+  font-style: normal;
+}
+
+.ins-more > summary:hover { background: var(--sunk); color: var(--ink); }
+.ins-more > summary:active { transform: scale(.98); }
+.ins-more > summary:focus-visible { outline: none; box-shadow: var(--ring-offset); }
+.ins-more[open] > summary { color: var(--ink-2); }
+.ins-more[open] > summary i { background: var(--ink-2); box-shadow: none; color: var(--surface); }
+
+.ins-more-body {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 72ch;
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-control);
+  background: var(--sunk);
+  color: var(--ink-2);
+}
+
+/* ---------- 口径 ---------- */
+
+.ins-foot {
+  padding-top: var(--space-4);
+  border-top: var(--line-1) solid var(--line);
+}
+
+.ins-foot dl.ins-more-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-2) var(--space-6);
+  max-width: none;
+}
+
+.ins-foot dl > div {
+  display: flex;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.ins-foot dt {
+  color: var(--faint);
+  font-size: var(--text-micro);
+  line-height: var(--leading-micro);
+  white-space: nowrap;
+}
+
+.ins-foot dd {
+  color: var(--muted);
+  font-size: var(--text-micro);
+  line-height: var(--leading-micro);
+}
+
+/* ---------- 动效 ---------- */
+
+@keyframes ins-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes ins-pop {
+  from {
+    opacity: 0;
+    transform: scale(.4);
+  }
+}
+
+@keyframes ins-fade {
+  from { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ins-note,
+  .ins-mark { animation-name: ins-fade; }
+
+  .ins-note:hover,
+  .ins-note:active,
+  .ins-node:hover .ins-node-dot,
+  .ins-node:active .ins-node-dot,
+  .ins-node[data-drag] .ins-node-dot { transform: none; }
+
+  .ins-step-iqr { transition: none; }
+
+  .ins-more > summary:active { transform: none; }
+}
+
+/* ---------- 宽度 ---------- */
+
+@media (max-width: 1280px) {
+  .ins-head {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .ins-metrics {
+    justify-self: start;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 1100px) {
+  .ins-roles {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  .ins-cohort-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  .ins-ladder {
+    padding-top: var(--space-5);
+    padding-left: 0;
+    border-top: var(--line-1) solid var(--line-soft);
+    border-left: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .ins {
+    gap: var(--space-5);
+    padding-bottom: var(--space-6);
+  }
+
+  .ins-head { gap: var(--space-3); }
+
+  .ins-lede {
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+  }
+
+  /* 指标条在手机上排成 2×2，数字缩一号 */
+  .ins-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-self: stretch;
+  }
+
+  .ins-metric {
+    max-width: none;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .ins-metric + .ins-metric { border-left: 0; }
+  .ins-metric:nth-child(2n) { border-left: var(--line-1) solid var(--line-soft); }
+  .ins-metric:nth-child(n + 3) { border-top: var(--line-1) solid var(--line-soft); }
+
+  .ins-metric-v {
+    font-size: var(--text-section);
+    line-height: var(--leading-section);
+  }
+
+  .ins-card {
+    gap: var(--space-4);
+    padding: var(--space-4);
+    border-radius: var(--radius-panel);
+  }
+
+  .ins-card-copy h2 {
+    font-size: var(--text-item);
+    line-height: var(--leading-item);
+  }
+
+  .ins-hint { display: none; }
+
+  /* 流图在手机上保持 760 宽，在自己的容器里横向滑；页面本身不溢出 */
+  .ins-canvas { min-width: 760px; }
+
+  .ins-stage::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--space-6);
+    background: linear-gradient(to right, color-mix(in oklab, var(--paper) 0%, transparent), var(--paper));
+    pointer-events: none;
+  }
+
+  .ins-scroll-hint {
+    display: block;
+    padding: var(--space-2) var(--space-3);
+    border-top: var(--line-1) solid var(--line-soft);
+    color: var(--faint);
+    font-size: var(--text-micro);
+    line-height: var(--leading-micro);
+    text-align: center;
+  }
+
+  .ins-callout { font-size: var(--text-body); line-height: var(--leading-body); }
+
+  .ins-roles {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .ins-role-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); }
+
+  .ins-role-when { grid-column: 1 / -1; }
+
+  .ins-role { padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3); }
+
+  .ins-role-big b { font-size: var(--text-section); line-height: var(--leading-section); }
+
+  .ins-role-big .ins-delta { display: none; }
+
+  .ins-role-label { font-size: var(--text-meta); line-height: var(--leading-meta); }
+
+  .ins-demo { height: 260px; }
+
+  .ins-card-tools { width: 100%; justify-content: space-between; }
+  .ins-card-tools:empty { display: none; }
+  .ins-more > summary { min-height: var(--touch-target); }
+}
+
+/* 流图下方的下钻空位：DATA-2 之后往里画「话题 → 行业 / 应用」子流图；没内容时 hidden */
+.ins-drill:not([hidden]) {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line-soft);
+}
+
+.ins-chart-note {
+  margin: var(--space-2) 0 0;
+  color: var(--muted);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+}
+
+
+/* LINK-2D · 话题与成员链接（按钮外另放 <a>，不嵌套） */
+.ins-legend-item{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--space-2);
+}
+.ins-legend-item .lk-object,
+.ins-people-list .lk-person,
+.ins-people-list .lk-object{
+  color:var(--accent-ink);
+  text-decoration:none;
+  font-size:var(--text-meta);
+}
+.ins-legend-item .lk-object:hover,
+.ins-people-list .lk-person:hover,
+.ins-people-list .lk-object:hover{text-decoration:underline}
+.ins-legend-item .lk-object:focus-visible,
+.ins-people-list .lk-person:focus-visible,
+.ins-people-list .lk-object:focus-visible{
+  outline:none;
+  box-shadow:var(--ring-offset);
+  border-radius:var(--radius-thumb);
+}
+.ins-people-list{
+  display:grid;
+  gap:var(--space-2);
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.ins-people-list li{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap:var(--space-2);
+}
+.ins-people-list span{color:var(--muted);font-size:var(--text-meta)}

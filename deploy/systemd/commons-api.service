@@ -1,0 +1,28 @@
+[Unit]
+Description=Commons FastAPI service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=commons
+Group=commons
+WorkingDirectory=/opt/commons/current/server
+EnvironmentFile=/etc/commons/env
+ExecStart=/opt/commons/venv/bin/uvicorn app.main:create_app --factory --host 127.0.0.1 --port ${COMMONS_API_PORT}
+Restart=on-failure
+RestartSec=3s
+TimeoutStopSec=30s
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

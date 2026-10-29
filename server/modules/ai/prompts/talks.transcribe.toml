@@ -1,0 +1,32 @@
+# 讲堂与会议录音转写。服务商待 部署者 选（见 RECEIPT-AI-1），现在只有接口和替身。
+# 调用方必须带 consent = "all_speakers"：所有发言人都同意了才转（D-R13-01 第 5 条，ROOM-1 同意状态机）。
+feature = "talks.transcribe"
+version = "2026-10-25.1"
+
+[tasks.transcribe]
+inputs = ["audio", "media_type", "consent"]
+optional = ["language", "duration_s", "speakers"]
+binary = ["audio"]
+expected_output_tokens = 0
+schema = '''
+{
+  "type": "object",
+  "properties": {
+    "language": {"type": "string"},
+    "text": {"type": "string"},
+    "segments": {"type": "array", "items": {
+      "type": "object",
+      "properties": {
+        "start": {"type": "number"},
+        "end": {"type": "number"},
+        "speaker": {"type": ["string", "null"]},
+        "text": {"type": "string"}
+      },
+      "required": ["start", "end", "speaker", "text"],
+      "additionalProperties": false
+    }}
+  },
+  "required": ["language", "text", "segments"],
+  "additionalProperties": false
+}
+'''

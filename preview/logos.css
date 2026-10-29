@@ -1,0 +1,6 @@
+/* 品牌 logo 方块：白底细边，logo 居中；没有 logo 时显示首字母。 */
+.brand-logo { flex: none; display: inline-grid; place-items: center; width: var(--space-8); height: var(--space-8); border: var(--line-1) solid var(--line); border-radius: var(--radius-thumb); background: var(--surface); color: var(--ink-2); font: var(--weight-semibold) var(--text-meta)/1 var(--sans); overflow: hidden; }
+.brand-logo img { width: 66%; height: 66%; object-fit: contain; display: block; }
+.brand-logo.is-sm { width: var(--space-6); height: var(--space-6); font-size: var(--text-micro); }
+.brand-logo.is-lg { width: var(--space-12); height: var(--space-12); border-radius: var(--radius-control); font-size: var(--text-item); }
+.brand-logo.is-mono { background: var(--accent-soft); border-color: transparent; }

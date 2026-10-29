@@ -1,0 +1,1052 @@
+/* RINGS-2 · 群的一年 · 年轮舞台
+ * 只引用 tokens.css 变量，不写 :root，无暖色。色阶在 .rings-module 上定义一次，JS 只按档位引用 --rd* / --rc*。
+ * 按天 = 蓝色阶（空日最淡的灰），群钟 = 青色阶，主题 = --cat-*。类名与 data 属性全部 rings- 前缀。
+ */
+
+.rings-module,
+.rings-module * { box-sizing: border-box; }
+
+.rings-module {
+  --rd-empty: var(--slate-100);
+  --rd0: var(--blue-100);
+  --rd1: var(--blue-200);
+  --rd2: var(--blue-300);
+  --rd3: var(--blue-400);
+  --rd4: var(--blue-500);
+  --rd5: var(--blue-600);
+  --rd6: var(--blue-700);
+  --rd7: var(--blue-800);
+  --rc-empty: var(--slate-100);
+  --rc0: var(--teal-100);
+  --rc1: var(--teal-200);
+  --rc2: var(--teal-300);
+  --rc3: var(--teal-400);
+  --rc4: var(--teal-500);
+  --rc5: var(--teal-600);
+  --rc6: var(--teal-700);
+  --rings-stage-bg: var(--tint-blue);
+  --rings-stage-line: color-mix(in oklab, var(--accent-line) 55%, transparent);
+  --thumb: var(--space-4);
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+  margin-block: var(--space-6) var(--space-10);
+  padding: var(--space-6);
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-stage);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+  font-size: var(--text-ui);
+  line-height: var(--leading-ui);
+  font-feature-settings: var(--num-features);
+}
+
+.rings-module[data-rings-view="clock"] {
+  --rings-stage-bg: var(--tint-teal);
+  --rings-stage-line: color-mix(in oklab, var(--agent-line) 60%, transparent);
+}
+
+.rings-module[data-rings-view="topic"] {
+  --rings-stage-bg: var(--paper);
+  --rings-stage-line: var(--line-soft);
+}
+
+.rings-module p,
+.rings-module dl,
+.rings-module dd { margin: 0; }
+
+.rings-module [hidden] { display: none !important; }
+
+/* ---------- 页头 ---------- */
+.rings-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-6);
+}
+
+.rings-head-main {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.rings-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.rings-title {
+  margin: 0;
+  font: var(--weight-semibold) var(--text-section)/var(--leading-section) var(--display);
+  letter-spacing: var(--tracking-snug);
+  color: var(--ink);
+}
+
+.rings-src {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--space-5);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--sunk);
+  color: var(--muted);
+  font: var(--weight-medium) var(--text-micro)/var(--leading-micro) var(--sans);
+  white-space: nowrap;
+}
+
+.rings-src::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.rings-sub {
+  font-size: var(--text-ui);
+  line-height: var(--leading-ui);
+  color: var(--muted);
+}
+
+/* 分段控件：照 KIT 的 .kit-seg，指示块用 transform 平移 */
+.rings-seg {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 2px;
+  padding: var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--sunk);
+  box-shadow: inset 0 0 0 var(--line-1) var(--line-soft);
+}
+
+.rings-seg-thumb {
+  position: absolute;
+  z-index: -1;
+  top: var(--space-1);
+  bottom: var(--space-1);
+  left: 0;
+  width: var(--w, 0);
+  transform: translateX(var(--x, 0));
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  opacity: 0;
+}
+
+.rings-seg[data-ready] .rings-seg-thumb {
+  opacity: 1;
+  transition: transform var(--motion-layout) var(--ease-spring), width var(--motion-layout) var(--ease-out);
+}
+
+.rings-seg:not([data-ready]) .rings-seg-item[aria-checked="true"] {
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.rings-module .rings-seg-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--control-compact);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--muted);
+  font: var(--weight-medium) var(--text-ui)/var(--leading-ui) var(--sans);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--motion-fast) var(--ease-out), transform var(--motion-fast) var(--ease-out);
+}
+
+.rings-module .rings-seg-item:hover { color: var(--ink); }
+.rings-module .rings-seg-item[aria-checked="true"] { color: var(--accent-ink); }
+
+.rings-module .rings-seg-item:focus-visible {
+  outline: none;
+  box-shadow: var(--ring-offset);
+}
+
+.rings-seg-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--slate-300);
+  transition: background-color var(--motion-base) var(--ease-out);
+}
+
+.rings-seg-item[data-rings-tab="day"][aria-checked="true"] .rings-seg-dot { background: var(--rd4); }
+.rings-seg-item[data-rings-tab="clock"][aria-checked="true"] .rings-seg-dot { background: var(--rc4); }
+.rings-seg-item[data-rings-tab="topic"][aria-checked="true"] .rings-seg-dot { background: var(--cat-6); }
+
+/* ---------- 主体：舞台 · 读数 · 标尺 ---------- */
+.rings-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 264px;
+  grid-template-areas:
+    "stage side"
+    "below side";
+  align-items: start;
+  gap: var(--space-4) var(--space-8);
+}
+
+.rings-stage {
+  grid-area: stage;
+  position: relative;
+  min-width: 0;
+  border-radius: var(--radius-panel);
+  background: var(--rings-stage-bg);
+  box-shadow: inset 0 0 0 var(--line-1) var(--rings-stage-line);
+  transition: background-color var(--motion-stage) var(--ease-in-out), box-shadow var(--motion-stage) var(--ease-in-out);
+}
+
+.rings-stage:has(.rings-viz:focus-visible) { box-shadow: var(--ring-offset); }
+
+.rings-frame {
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.rings-module .rings-viz {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.rings-module .rings-viz:focus-visible { outline: none; }
+
+/* 图层：只动透明度和 transform（镜头切换 --motion-stage） */
+.rings-layer {
+  opacity: 0;
+  pointer-events: none;
+  transform-box: view-box;
+  transform-origin: 420px 280px;
+  transition: opacity var(--motion-stage) var(--ease-in-out), transform var(--motion-stage) var(--ease-in-out);
+}
+
+.rings-module[data-rings-view="day"] :is([data-rings-layer="year"], [data-rings-layer="band"]),
+.rings-module[data-rings-view="clock"] [data-rings-layer="clock"],
+.rings-module[data-rings-view="topic"] [data-rings-layer="topic"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* SVG 标记 */
+.rings-day,
+.rings-band-cell,
+.rings-clock-cell {
+  fill: var(--b);
+  cursor: pointer;
+}
+
+.rings-module[data-rings-view="day"] .rings-band-cell { opacity: .58; transition: opacity var(--motion-fast) var(--ease-out); }
+.rings-module[data-rings-view="day"] .rings-band-cell:hover { opacity: 1; }
+
+.rings-gap {
+  fill: var(--rd-empty);
+  pointer-events: none;
+}
+
+.rings-wd,
+.rings-zwd,
+.rings-h {
+  font: var(--weight-medium) var(--text-micro)/1 var(--sans);
+  fill: var(--faint);
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+  transition: fill var(--motion-fast) var(--ease-out);
+}
+
+.rings-h { font-family: var(--mono); }
+.rings-h.is-major { fill: var(--muted); font-weight: var(--weight-semibold); }
+
+.rings-wd.is-on,
+.rings-zwd.is-on,
+.rings-h.is-on {
+  fill: var(--ink);
+  font-weight: var(--weight-semibold);
+}
+
+.rings-leader {
+  fill: none;
+  stroke: var(--slate-400);
+  stroke-width: 1;
+}
+
+.rings-leader-dot { fill: var(--ink); }
+
+.rings-callout {
+  font: var(--weight-semibold) var(--text-meta)/1 var(--sans);
+  fill: var(--ink-2);
+}
+
+.rings-callout .rings-callout-sub {
+  font-size: var(--text-micro);
+  font-weight: var(--weight-regular);
+  fill: var(--muted);
+}
+
+/* 中心盘：只做定位标签，主数在右侧读数里 */
+.rings-center-disc {
+  fill: var(--surface);
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.rings-center-value {
+  font: var(--weight-semibold) var(--text-item)/1 var(--display);
+  letter-spacing: var(--tracking-snug);
+  fill: var(--ink);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.rings-center-value.is-long { font-size: var(--text-meta); letter-spacing: 0; }
+.rings-center-value.is-alt { display: none; }
+
+.rings-center-meta {
+  font: var(--weight-regular) var(--text-micro)/1 var(--sans);
+  fill: var(--muted);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* 主题环 */
+.rings-topic-ring {
+  fill: none;
+  stroke: color-mix(in oklab, var(--slate-400) 9%, transparent);
+  pointer-events: none;
+}
+
+.rings-topic-track {
+  fill: color-mix(in oklab, var(--c) 0%, transparent);
+  cursor: pointer;
+  transition: fill var(--motion-fast) var(--ease-out);
+}
+
+.rings-topic.is-back:hover .rings-topic-track { fill: color-mix(in oklab, var(--c) 8%, transparent); }
+.rings-topic.is-back.is-on .rings-topic-track { fill: color-mix(in oklab, var(--c) 12%, transparent); }
+
+.rings-topic-bar {
+  fill: var(--c);
+  pointer-events: none;
+  transition: opacity var(--motion-base) var(--ease-out);
+}
+
+.rings-topic-base {
+  fill: none;
+  stroke: var(--slate-400);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+  pointer-events: none;
+}
+
+.rings-topic-label {
+  font: var(--weight-medium) var(--text-meta)/1 var(--sans);
+  fill: var(--ink-2);
+  dominant-baseline: central;
+  cursor: pointer;
+  transition: fill var(--motion-fast) var(--ease-out), opacity var(--motion-fast) var(--ease-out);
+}
+
+.rings-topic-label .rings-topic-delta {
+  font: var(--weight-medium) var(--text-micro)/1 var(--mono);
+  fill: var(--muted);
+}
+
+.rings-topic.is-rise .rings-topic-delta { fill: var(--ink); font-weight: var(--weight-semibold); }
+
+[data-rings-layer="topic"].has-sel .rings-topic:not(.is-on) .rings-topic-bar { opacity: .58; }
+[data-rings-layer="topic"].has-sel .rings-topic:not(.is-on) .rings-topic-label { fill: var(--muted); }
+.rings-topic.is-on .rings-topic-label { fill: var(--ink); font-weight: var(--weight-semibold); }
+
+/* 悬停与选中标记（叠在最上层，不挡指针） */
+.rings-marks path {
+  fill: none;
+  pointer-events: none;
+  stroke-linejoin: round;
+}
+
+.rings-hover {
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  opacity: 0;
+  transform-box: view-box;
+  transition: opacity var(--motion-fast) var(--ease-out), transform var(--motion-fast) var(--ease-out);
+}
+
+.rings-hover[data-show] { opacity: .62; }
+
+.rings-sel-halo {
+  stroke: var(--surface);
+  stroke-width: 4;
+}
+
+.rings-sel {
+  stroke: var(--ink);
+  stroke-width: 1.6;
+}
+
+.rings-sel,
+.rings-sel-halo { transition: d var(--motion-layout) var(--ease-out); }
+
+.rings-marks[data-snap] :is(.rings-sel, .rings-sel-halo) { transition: none; }
+.rings-marks[data-enter] { animation: rings-mark-in var(--motion-stage) var(--ease-out); }
+
+/* 浮层提示：对齐 KIT .kit-tipfloat */
+.rings-tip {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  top: 0;
+  display: grid;
+  gap: 2px;
+  max-width: min(260px, calc(100vw - var(--space-8)));
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-control);
+  background: var(--slate-900);
+  color: var(--slate-25);
+  font: var(--weight-medium) var(--text-meta)/var(--leading-meta) var(--sans);
+  box-shadow: var(--shadow-2);
+  pointer-events: none;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, calc(-100% - var(--space-3)));
+  transition: opacity var(--motion-fast) var(--ease-out), translate var(--motion-fast) var(--ease-out);
+}
+
+.rings-tip[data-side="bottom"] { transform: translate(-50%, var(--space-3)); }
+.rings-tip[data-show] { opacity: 1; }
+
+.rings-tip-t {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--weight-semibold);
+  color: var(--slate-25);
+}
+
+.rings-tip-sw {
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: var(--radius-thumb);
+  background: var(--b);
+  box-shadow: inset 0 0 0 var(--line-1) color-mix(in oklab, var(--slate-25) 30%, transparent);
+}
+
+.rings-tip-n { color: var(--slate-200); }
+.rings-tip-n b { font-weight: var(--weight-semibold); color: var(--slate-25); }
+.rings-tip-m { color: var(--slate-400); }
+
+/* ---------- 读数 ---------- */
+.rings-side {
+  grid-area: side;
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+  min-width: 0;
+  padding-top: var(--space-2);
+}
+
+.rings-side[data-enter] > :is(.rings-side-kicker, .rings-side-big, .rings-rows) { animation: rings-enter var(--motion-enter) var(--ease-out); }
+
+.rings-side-label {
+  font: var(--weight-semibold) var(--text-micro)/var(--leading-micro) var(--sans);
+  letter-spacing: var(--tracking-label);
+  color: var(--faint);
+}
+
+.rings-side-kicker {
+  margin-top: calc(-1 * var(--space-2));
+  font: var(--weight-medium) var(--text-ui)/var(--leading-ui) var(--sans);
+  color: var(--ink-2);
+}
+
+.rings-side-big {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+  margin-top: calc(-1 * var(--space-2));
+}
+
+.rings-side-big b {
+  font: var(--weight-semibold) var(--text-stat)/var(--leading-stat) var(--display);
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink);
+  font-feature-settings: var(--num-features);
+}
+
+.rings-side-big span {
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  color: var(--muted);
+}
+
+.rings-meter {
+  height: var(--space-1);
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--sunk);
+}
+
+.rings-meter i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--m, var(--accent));
+  transform: scaleX(var(--p, 0));
+  transform-origin: left center;
+  transition: transform var(--motion-layout) var(--ease-out), background-color var(--motion-base) var(--ease-out);
+}
+
+.rings-rows {
+  display: grid;
+  border-top: var(--line-1) solid var(--line-soft);
+}
+
+.rings-rows > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: var(--line-1) solid var(--line-soft);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+}
+
+.rings-rows dt { color: var(--muted); white-space: nowrap; }
+.rings-rows dd { color: var(--ink-2); font-weight: var(--weight-medium); text-align: right; }
+
+.rings-side-act { display: flex; }
+.rings-module .rings-reset { margin: 0; }
+
+.rings-keys {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-micro);
+  line-height: var(--leading-micro);
+  color: var(--faint);
+}
+
+.rings-module kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--space-5);
+  height: var(--space-5);
+  margin: 0;
+  padding: 0 var(--space-1);
+  border: var(--line-1) solid var(--line);
+  border-radius: var(--radius-thumb);
+  background: var(--surface);
+  box-shadow: inset 0 -1px 0 var(--line);
+  color: var(--muted);
+  font: var(--weight-medium) var(--text-micro)/1 var(--mono);
+}
+
+.rings-sr {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- 图例 · 标尺 · 读法 ---------- */
+.rings-below {
+  grid-area: below;
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.rings-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  color: var(--muted);
+}
+
+.rings-legend[data-enter] { animation: rings-fade var(--motion-enter) var(--ease-out); }
+
+.rings-scale {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  white-space: nowrap;
+}
+
+.rings-scale b {
+  font-weight: var(--weight-medium);
+  color: var(--ink-2);
+}
+
+.rings-ramp {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.rings-sw {
+  display: inline-block;
+  flex: none;
+  width: var(--space-3);
+  height: var(--space-3);
+  border-radius: var(--radius-thumb);
+  background: var(--b);
+  box-shadow: inset 0 0 0 var(--line-1) color-mix(in oklab, var(--ink) 6%, transparent);
+}
+
+.rings-sw.is-base {
+  width: var(--space-4);
+  height: 0;
+  border-radius: 0;
+  border-top: var(--line-1) dashed var(--slate-400);
+  background: none;
+}
+
+.rings-sw.is-base { box-shadow: none; }
+
+.rings-dir {
+  display: inline-grid;
+  place-items: center;
+  width: var(--space-4);
+  height: var(--space-4);
+  border-radius: var(--radius-thumb);
+  background: var(--sunk);
+  color: var(--ink-2);
+  font: var(--weight-semibold) var(--text-micro)/1 var(--sans);
+  font-style: normal;
+}
+
+.rings-dir + .rings-dir,
+.rings-scale > .rings-dir:not(:first-child) { margin-left: var(--space-2); }
+
+.rings-legend-note {
+  margin-left: auto;
+  color: var(--faint);
+  text-align: right;
+}
+
+.rings-ruler { min-height: 84px; }
+
+.rings-track {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.rings-track[data-enter] { animation: rings-enter var(--motion-enter) var(--ease-out); }
+
+.rings-module .rings-spark {
+  display: block;
+  width: calc(100% - var(--thumb));
+  height: var(--space-8);
+  margin-inline: calc(var(--thumb) / 2);
+  overflow: visible;
+}
+
+.rings-spark-bar {
+  fill: var(--b);
+  transition: fill var(--motion-fast) var(--ease-out);
+}
+
+.rings-spark-bar.is-on { fill: var(--ink); }
+
+.rings-range {
+  display: block;
+  width: 100%;
+  height: var(--space-5);
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.rings-range:focus-visible { outline: none; }
+
+.rings-range::-webkit-slider-runnable-track {
+  height: var(--line-2);
+  border-radius: var(--radius-pill);
+  background: var(--line);
+}
+
+.rings-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: var(--thumb);
+  height: var(--thumb);
+  margin-top: calc((var(--line-2) - var(--thumb)) / 2);
+  border: var(--line-2) solid var(--accent);
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  transition: transform var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast) var(--ease-out);
+}
+
+.rings-range::-moz-range-track {
+  height: var(--line-2);
+  border-radius: var(--radius-pill);
+  background: var(--line);
+}
+
+.rings-range::-moz-range-thumb {
+  width: var(--thumb);
+  height: var(--thumb);
+  border: var(--line-2) solid var(--accent);
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  transition: transform var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast) var(--ease-out);
+}
+
+.rings-range:hover::-webkit-slider-thumb { box-shadow: var(--shadow-2); }
+.rings-range:hover::-moz-range-thumb { box-shadow: var(--shadow-2); }
+.rings-range:focus-visible::-webkit-slider-thumb { box-shadow: var(--ring-offset); }
+.rings-range:focus-visible::-moz-range-thumb { box-shadow: var(--ring-offset); }
+
+.rings-months {
+  position: relative;
+  height: var(--space-4);
+  font: var(--weight-medium) var(--text-micro)/var(--leading-micro) var(--mono);
+  color: var(--faint);
+}
+
+.rings-months span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  transition: color var(--motion-fast) var(--ease-out);
+}
+
+.rings-months span.is-on { color: var(--ink-2); }
+
+.rings-cap {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  color: var(--muted);
+}
+
+.rings-cap b {
+  font-weight: var(--weight-medium);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.rings-hours,
+.rings-hours-axis {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.rings-hours {
+  align-items: end;
+  height: var(--space-10);
+}
+
+.rings-hours i {
+  display: block;
+  height: var(--h);
+  border-radius: var(--radius-thumb) var(--radius-thumb) 0 0;
+  background: var(--b);
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-out), opacity var(--motion-fast) var(--ease-out);
+}
+
+.rings-hours i:hover { opacity: .72; }
+.rings-hours i.is-on { background: var(--ink); opacity: 1; }
+
+.rings-hours-axis {
+  font: var(--weight-medium) var(--text-micro)/var(--leading-micro) var(--mono);
+  color: var(--faint);
+}
+
+.rings-hours-axis span {
+  justify-self: center;
+  white-space: nowrap;
+}
+
+.rings-share {
+  display: flex;
+  gap: 2px;
+  height: var(--space-3);
+  margin-block: var(--space-1);
+}
+
+.rings-share i {
+  flex: var(--f) 1 0;
+  min-width: 2px;
+  border-radius: 0;
+  background: var(--c);
+  cursor: pointer;
+  transition: opacity var(--motion-fast) var(--ease-out);
+}
+
+.rings-share i:first-child { border-radius: var(--radius-pill) 0 0 var(--radius-pill); }
+.rings-share i:last-child { border-radius: 0 var(--radius-pill) var(--radius-pill) 0; }
+.rings-share.has-sel i:not(.is-on) { opacity: .45; }
+.rings-share.has-sel i:not(.is-on):hover { opacity: .75; }
+
+.rings-topic-list { display: none; }
+
+.rings-sowhat {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-control);
+  background: var(--paper);
+  font-size: var(--text-ui);
+  line-height: var(--leading-ui);
+  color: var(--ink-2);
+}
+
+.rings-sowhat-k {
+  flex: none;
+  font: var(--weight-semibold) var(--text-micro)/var(--leading-micro) var(--sans);
+  letter-spacing: var(--tracking-label);
+  color: var(--faint);
+}
+
+/* ---------- 页脚 · 空态 ---------- */
+.rings-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-5);
+  padding-top: var(--space-4);
+  border-top: var(--line-1) solid var(--line-soft);
+  font-size: var(--text-micro);
+  line-height: var(--leading-micro);
+  color: var(--faint);
+}
+
+.rings-empty {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.rings-empty p {
+  max-width: 56ch;
+  padding: var(--space-4);
+  border: var(--line-1) dashed var(--line-strong);
+  border-radius: var(--radius-panel);
+  background: var(--paper);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--muted);
+}
+
+.rings-empty.is-error p {
+  border-style: solid;
+  border-color: var(--danger-line);
+  background: var(--danger-soft);
+  color: var(--danger-ink);
+}
+
+/* ---------- 动效 ---------- */
+@keyframes rings-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes rings-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rings-mark-in {
+  0%, 45% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rings-layer { transform: scale(.96); }
+
+  .rings-module[data-rings-view="day"] :is([data-rings-layer="year"], [data-rings-layer="band"]),
+  .rings-module[data-rings-view="clock"] [data-rings-layer="clock"],
+  .rings-module[data-rings-view="topic"] [data-rings-layer="topic"] { transform: none; }
+
+  .rings-module .rings-seg-item:active { transform: scale(.96); }
+  .rings-hover[data-press] { transform: scale(.94); }
+  .rings-tip { translate: 0 2px; }
+  .rings-tip[data-side="bottom"] { translate: 0 -2px; }
+  .rings-tip[data-show] { translate: 0 0; }
+  .rings-range:hover::-webkit-slider-thumb { transform: scale(1.12); }
+  .rings-range:active::-webkit-slider-thumb { transform: scale(.94); }
+  .rings-range:hover::-moz-range-thumb { transform: scale(1.12); }
+  .rings-range:active::-moz-range-thumb { transform: scale(.94); }
+  .rings-hours i:active,
+  .rings-share i:active { transform: scaleY(.94); transform-origin: bottom; }
+  .rings-topic-chip:active { transform: scale(.98); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rings-layer,
+  .rings-stage { transition: opacity var(--motion-fast) var(--ease-out), background-color var(--motion-fast) var(--ease-out); }
+  .rings-seg[data-ready] .rings-seg-thumb { transition: opacity var(--motion-fast) var(--ease-out); }
+  .rings-sel,
+  .rings-sel-halo,
+  .rings-meter i { transition: none; }
+  .rings-track[data-enter],
+  .rings-side[data-enter] > :is(.rings-side-kicker, .rings-side-big, .rings-rows) { animation: rings-fade var(--motion-fast) var(--ease-out); }
+  .rings-marks[data-enter] { animation: none; }
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 1100px) {
+  .rings-body { grid-template-columns: minmax(0, 1fr) 232px; gap: var(--space-4) var(--space-6); }
+  .rings-legend-note { margin-left: 0; text-align: left; }
+}
+
+@media (max-width: 900px) {
+  .rings-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "stage"
+      "side"
+      "below";
+  }
+
+  .rings-side {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "label act"
+      "kicker act"
+      "big big"
+      "meter meter"
+      "rows rows"
+      "sowhat sowhat";
+    gap: var(--space-2) var(--space-4);
+    padding: var(--space-4);
+    border-radius: var(--radius-panel);
+    background: var(--paper);
+  }
+
+  .rings-side-label { grid-area: label; }
+  .rings-side-kicker { grid-area: kicker; margin-top: 0; }
+  .rings-side-big { grid-area: big; margin-top: 0; }
+  .rings-meter { grid-area: meter; }
+  .rings-rows { grid-area: rows; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); border-top: 0; padding-top: var(--space-2); }
+  .rings-rows > div { display: grid; align-content: start; gap: 2px; padding: 0; border-bottom: 0; }
+  .rings-rows dd { text-align: left; }
+  .rings-side-act { grid-area: act; align-self: center; }
+  .rings-sowhat { grid-area: sowhat; margin-top: var(--space-1); background: var(--surface); }
+  .rings-keys { display: none; }
+}
+
+@media (max-width: 760px) {
+  .rings-module {
+    --thumb: var(--space-5);
+    gap: var(--space-4);
+    margin-block: var(--space-4) var(--space-8);
+    padding: var(--space-4);
+    border-radius: var(--radius-panel);
+  }
+
+  .rings-head { flex-direction: column; align-items: stretch; gap: var(--space-3); }
+  .rings-seg { display: flex; }
+  .rings-module .rings-seg-item { position: relative; flex: 1; min-height: var(--control-height); }
+  .rings-module .rings-seg-item::after { content: ''; position: absolute; inset: calc(-1 * var(--space-1)) 0; }
+
+  /* 手机：裁到圆环本身（视窗 x 150–690），旁注改由读数承担 */
+  .rings-module .rings-viz { width: 155.56%; margin-left: -27.78%; }
+  .rings-callouts,
+  .rings-topic-label { display: none; }
+  .rings-wd,
+  .rings-zwd,
+  .rings-h { font-size: calc(var(--text-micro) * 1.55); }
+  .rings-center-value { font-size: calc(var(--text-item) * 1.45); }
+  .rings-center-value:not(.is-alt) { display: none; }
+  .rings-center-value.is-alt { display: inline; }
+  .rings-center-meta { font-size: calc(var(--text-micro) * 1.45); }
+
+  .rings-side { padding: var(--space-3) var(--space-4); }
+  .rings-module .rings-reset { min-height: var(--touch-target); }
+
+  .rings-range { height: var(--touch-target); }
+  .rings-months span:nth-child(even):not(.is-on) { display: none; }
+  .rings-hours-axis span:nth-child(even) { display: none; }
+
+  .rings-legend { gap: var(--space-2) var(--space-4); }
+  .rings-legend-note { flex-basis: 100%; white-space: normal; }
+  .rings-scale { flex-wrap: wrap; }
+
+  .rings-topic-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-1);
+    margin-top: var(--space-2);
+  }
+
+  .rings-module .rings-topic-chip {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    min-height: var(--touch-target);
+    padding: 0 var(--space-3);
+    border: var(--line-1) solid var(--line);
+    border-radius: var(--radius-control);
+    background: var(--surface);
+    color: var(--ink-2);
+    font: var(--weight-medium) var(--text-meta)/var(--leading-meta) var(--sans);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast) var(--ease-out), transform var(--motion-fast) var(--ease-out);
+  }
+
+  .rings-topic-chip i {
+    flex: none;
+    width: var(--space-2);
+    height: var(--space-2);
+    border-radius: var(--radius-thumb);
+    background: var(--c);
+  }
+
+  .rings-topic-chip span {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .rings-topic-chip b {
+    font: var(--weight-medium) var(--text-micro)/1 var(--mono);
+    color: var(--muted);
+  }
+
+  .rings-module .rings-topic-chip[aria-pressed="true"] {
+    border-color: var(--ink);
+    box-shadow: 0 0 0 var(--space-1) color-mix(in oklab, var(--ink) 8%, transparent);
+    color: var(--ink);
+  }
+
+  .rings-module .rings-topic-chip:focus-visible { outline: none; box-shadow: var(--ring-offset); }
+
+}
