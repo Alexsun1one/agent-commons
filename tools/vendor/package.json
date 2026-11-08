@@ -18,6 +18,7 @@
     "html-to-image": "1.11.13",
     "livekit-client": "2.22.4",
     "rrweb-player": "2.1.7",
+    "three": "0.187.0",
     "ts-fsrs": "5.4.2",
     "wavesurfer.js": "8.0.2"
   },

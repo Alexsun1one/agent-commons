@@ -16,6 +16,20 @@
 | 文档 | README / 待办写作检查、公开文档相对链接检查 | 通过 |
 | 封面 | 查看生成图片并核对标题 | 中文与英文标题正确；原图 1672 × 941 PNG，发布版为像素一致的无损 WebP |
 
+## 2026-11-07 补充：X-GATE 入口、种子数据与开发脚本
+
+| 范围 | 命令或方式 | 结果 |
+|---|---|---|
+| live 静态构建（含 X-GATE） | `python3 tools/build-delivery.py --live --output <新空目录>` | 成功；X-GATE 单独打包到 `x-gate/`，无内联脚本，示例指纹检查通过 |
+| X-GATE 构建与种子数据 | `cd server && python3 -m unittest tests.test_xgate_build tests.test_seed_demo` | 通过 |
+| X-GATE 前端 | `node --test preview/x-gate/tests/`；`node --import ./preview/x-gate/tools/register.mjs preview/x-gate/tools/check-all.mjs` | 52 项通过；五座楼高低两档几何与预算检查通过 |
+| 业务模块 | `cd server && python3 -m unittest discover -s modules -t .` | 620 项通过 |
+| 静态检查 | `lint-xss.py`、`lint-tokens.py --strict`、`check-public.py` | 0 条命中；公开清单检查通过 |
+| 本机开发脚本 | `PORT=8734 tools/dev.sh` | 建环境、构建、迁移、签发邀请码并启动；`/api/health` 正常 |
+| 浏览器冒烟 | 新库执行 `seed-demo` 后启动服务，在 1440×900 与 390×844 下以访客与虚构管理员分别打开社区首页与 `/x-gate/` 五座楼工作台 | 访客只见 3D 世界与登录提示；登录后各楼显示真实接口数据；无页面脚本错误 |
+
+GitHub 上的 CI 工作流尚未运行；本次未覆盖真实手机、辅助技术与生产 CSP 实机。
+
 ## 仍未通过的历史回归
 
 `cd server && python3 -m unittest discover -s tests -t .` 执行 829 项，报告 28 个失败、5 个错误、2 个跳过。补齐公开示例、环境变量文档和撤回重放入口后，对原失败用例定向复验 32 项，剩余 17 个失败、2 个错误（含子测试计数）。

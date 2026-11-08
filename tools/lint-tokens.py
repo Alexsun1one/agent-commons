@@ -17,10 +17,11 @@
 JS 只查颜色字面量；data.js 同样只查颜色。
 
 用法：
-  python3 tools/lint-tokens.py                     # 全量扫描，写两份报告
+  python3 tools/lint-tokens.py                     # 全量扫描，只打印到终端
   python3 tools/lint-tokens.py --strict            # 有问题时退出 1
+  python3 tools/lint-tokens.py --report-dir /tmp/lint
+                                                  # 额外写 LINT-report.md 与 LINT-report.json
   python3 tools/lint-tokens.py --files preview/app.css preview/app.js
-                                                  # 自查，只打印，不覆盖总报告
   python3 tools/lint-tokens.py --files a.css --md /tmp/x.md --json /tmp/x.json
 """
 
@@ -37,9 +38,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PREVIEW = ROOT / "preview"
 TOKENS = PREVIEW / "tokens.css"
-REPORT_DIR = ROOT / "docs" / "innovation" / "R12" / "w2"
-DEFAULT_MD = REPORT_DIR / "LINT-report.md"
-DEFAULT_JSON = REPORT_DIR / "LINT-report.json"
 
 KIND_ORDER = ["warm", "color", "root", "font", "radius", "duration", "spacing"]
 KIND_LABEL = {
@@ -778,13 +776,16 @@ def main(argv=None) -> int:
         description="R12-W2 LINT-1：只读扫描 preview 下的档位/颜色问题，只报告，不改文件。",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "默认全量扫描写固定报告；--files 自查模式只打印，除非显式给 --md/--json。\n"
+            "默认只打印到终端。--report-dir 才写 LINT-report.md 与 LINT-report.json；\n"
+            "--md / --json 可单独指定路径。\n"
             "退出码：0 正常；--strict 且有问题时 1；用法/基线错误 2。"
         ),
     )
     parser.add_argument("--files", nargs="+", metavar="FILE",
                         help="只扫指定文件（相对项目根或当前目录），供单卡自查")
     parser.add_argument("--strict", action="store_true", help="有任一条问题即退出 1")
+    parser.add_argument("--report-dir", metavar="DIR",
+                        help="把 LINT-report.md 与 LINT-report.json 写到该目录；默认不写文件")
     parser.add_argument("--md", metavar="PATH", help="Markdown 报告路径")
     parser.add_argument("--json", metavar="PATH", help="JSON 报告路径")
     parser.add_argument("--quiet", action="store_true", help="不打印表格，只打印一行摘要")
@@ -823,13 +824,9 @@ def main(argv=None) -> int:
     payload = build_payload(files, findings, tokens, scope_mode)
     payload["passed"] = not findings
 
-    if self_check:
-        # 自查模式：只写显式指定的产物，避免覆盖全量报告
-        md_path = Path(args.md) if args.md else None
-        json_path = Path(args.json) if args.json else None
-    else:
-        md_path = Path(args.md) if args.md else DEFAULT_MD
-        json_path = Path(args.json) if args.json else DEFAULT_JSON
+    report_dir = Path(args.report_dir) if args.report_dir else None
+    md_path = Path(args.md) if args.md else (report_dir / "LINT-report.md" if report_dir else None)
+    json_path = Path(args.json) if args.json else (report_dir / "LINT-report.json" if report_dir else None)
 
     written = []
     if md_path is not None:
@@ -852,7 +849,7 @@ def main(argv=None) -> int:
             for p in written:
                 print(f"报告：{rel(p)}")
         else:
-            print("自查模式：未写报告文件（需要落盘请加 --md / --json）。")
+            print("未写报告文件（需要落盘请加 --report-dir，或分别指定 --md / --json）。")
 
     return 1 if (args.strict and findings) else 0
 

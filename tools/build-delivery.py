@@ -428,6 +428,75 @@ def _legal_pages(root, css_name):
     return pages, sources
 
 
+def _build_xgate(root, output):
+    gate = root / 'preview/x-gate'
+    if not gate.exists():
+        return None
+    index = gate / 'index.html'
+    source = index.read_text(encoding='utf-8')
+    LiveHTMLPolicy().feed(source)
+    parser = IndexAssets()
+    parser.feed(source)
+    config = {'root': str(root), 'styles': [], 'scripts': []}
+    for kind, url, _ in parser.items:
+        _resolve_local(gate, url, 'x-gate/index.html')
+        config['styles' if kind == 'style' else 'scripts'].append(url)
+    helper = Path(__file__).resolve().parent.parent / 'preview/x-gate/tools/build.mjs'
+    result = subprocess.run(['node', str(helper)], input=json.dumps(config),
+                            text=True, capture_output=True, check=False)
+    if result.returncode:
+        raise BuildError('X-GATE 打包失败：' + result.stderr.strip())
+    bundle = json.loads(result.stdout)
+    css = bundle['css']
+    css_name = 'style.' + hashlib.sha256(css.encode()).hexdigest()[:12] + '.css'
+    js = bundle['js'].replace('__XGATE_STYLESHEET__', css_name)
+    if re.search(r'\bimport\s*\(', js):
+        raise BuildError('X-GATE 产物仍含未打包的动态 import')
+    js_name = 'app.' + hashlib.sha256(js.encode()).hexdigest()[:12] + '.js'
+    for kind in ('style', 'script'):
+        first = True
+        for item_kind, _, raw in parser.items:
+            if item_kind != kind:
+                continue
+            replacement = (f'<link rel="stylesheet" href="{css_name}">' if kind == 'style'
+                           else f'<script type="module" src="{js_name}"></script>') if first else ''
+            if kind == 'style':
+                source = source.replace(raw, replacement, 1)
+            else:
+                source = re.sub(re.escape(raw) + r'\s*</script\s*>', lambda _: replacement,
+                                source, count=1, flags=re.I)
+            first = False
+    LiveHTMLPolicy().feed(source)
+    files = {'index.html': source, css_name: css, js_name: js}
+    for name, text in files.items():
+        _assert_live_text('x-gate/' + name, text)
+    for item in bundle['sources']:
+        path = Path(item['file'])
+        if hashlib.sha256(path.read_bytes()).hexdigest() != item['sha256']:
+            raise BuildError(f'构建中源文件发生变化：{path.name}；请重新构建')
+    target = output / 'x-gate'
+    target.mkdir(parents=True)
+    for name, text in files.items():
+        (target / name).write_text(text, encoding='utf-8')
+    for item in bundle['assets']:
+        relative = 'assets/' + item['relative']
+        path = Path(item['source']).resolve()
+        if not path.is_relative_to((root / 'preview').resolve()):
+            raise BuildError('X-GATE 资源位于 preview/ 之外：' + relative)
+        destination = (target / relative).resolve()
+        if not destination.is_relative_to(target.resolve()):
+            raise BuildError('X-GATE 非法资源路径：' + relative)
+        _assert_live_text('x-gate/' + relative, relative)
+        if _demo_file(relative):
+            raise BuildError('X-GATE 引用了示例资源：' + relative)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, destination)
+    return {'js_bundle': js_name, 'css_bundle': css_name,
+            'js_bytes': len(js.encode()), 'assets': len(bundle['assets']),
+            'sources': [{'path': _relative(Path(item['file']), root), 'sha256': item['sha256']}
+                        for item in bundle['sources']]}
+
+
 def build_live(root, output):
     """Build a fail-closed, external-script-only static directory for the server."""
     preview = root / 'preview'
@@ -515,6 +584,7 @@ def build_live(root, output):
         worker = worker.replace("var PREFIX = 'commons-';", "var PREFIX = 'commons-live-';")
         _assert_live_text('sw.js', worker)
         (output / 'sw.js').write_text(worker, encoding='utf-8')
+    xgate = _build_xgate(root, output)
     # Verify the actual output, not just the list of selected sources.
     inventory = []
     for path in sorted(output.rglob('*')):
@@ -529,7 +599,7 @@ def build_live(root, output):
     return {'mode': 'live', 'output_dir': str(output), 'js_bundle': js_name, 'css_bundle': css_name,
             'excluded_demo_sources': excluded,
             'sources': [{'path': _relative(i['path'], root), 'sha256': i['source_sha256']} for i in kept],
-            'legal_sources': legal_sources,
+            'legal_sources': legal_sources, 'x_gate': xgate,
             'files': inventory, 'output_bytes': sum(i['bytes'] for i in inventory)}
 
 
