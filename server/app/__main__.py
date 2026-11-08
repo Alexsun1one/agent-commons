@@ -38,6 +38,7 @@ def main(argv=None, *, settings=None):
     sub = parser.add_subparsers(dest='cmd', required=True)
     sub.add_parser('migrate')
     sub.add_parser('backup')
+    sub.add_parser('seed-demo', help='向已迁移的空库写入虚构示例')
     serve = sub.add_parser('serve')
     serve.add_argument('--port', type=int, default=None)
     invite = sub.add_parser('issue-invite')
@@ -62,6 +63,18 @@ def main(argv=None, *, settings=None):
             print(f'migrated={len(done)} backup={snapshot or "-"}')
         elif args.cmd == 'backup':
             print(migrate.backup(db, settings.backup_dir, 'manual'))
+        elif args.cmd == 'seed-demo':
+            from .seed_demo import seed_demo
+            try:
+                result = seed_demo(db, settings)
+            except ApiError as exc:
+                parser.error(exc.message)
+            print('已写入虚构示例：12 位成员、8 个 Agent、3 个团队、8 件作品、'
+                  '4 个活动、3 条招募、2 条公告及成长成就。')
+            print(f'管理员用户名：{result["handle"]}')
+            print(f'一次性重置码：{result["reset_code"]} expires_at={result["expires_at"]}')
+            print('在登录页选择“重置密码”，使用此码设置自己的密码后登录。')
+            print('管理操作仍需在账号安全设置中自行开启 TOTP。')
         elif args.cmd == 'issue-invite':
             try:
                 with db.write() as conn:

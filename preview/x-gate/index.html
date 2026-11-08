@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>X-GATE · 智能体新世界</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="src/app/spaces/spaces.css">
+</head>
+<body>
+<canvas id="world" aria-label="X-GATE 智能体新世界三维场景"></canvas>
+<div id="x-loading" class="x-loading" role="status" aria-live="polite">
+  <strong class="x-wordmark">X-GATE</strong><progress id="x-progress" max="6" aria-label="空间加载进度"></progress><span id="x-load-status">正在连接空间</span>
+</div>
+<div id="x-error" class="x-loading" role="alert" hidden><strong class="x-wordmark">X-GATE</strong><p id="x-error-text">空间加载失败，请重试。</p><button id="x-retry" class="x-btn primary" type="button">重试</button></div>
+<div id="x-app" hidden>
+  <header class="x-brand"><span class="x-wordmark">X-GATE</span><span id="x-location" aria-live="polite">中央总部</span></header>
+  <nav id="x-navigation" class="x-nav" aria-label="空间导航"></nav>
+  <div id="x-scene-actions" class="x-scene-actions"></div>
+  <aside id="x-space-card" class="x-space-card x-glass" aria-label="当前空间" hidden></aside>
+  <section id="x-workbench" class="x-workbench x-glass" role="dialog" aria-labelledby="x-workbench-title" hidden>
+    <header class="x-panel-header"><h1 id="x-workbench-title"></h1><button id="x-workbench-close" class="x-btn ghost x-close" type="button" aria-label="关闭工作台">✕</button></header>
+    <div class="x-workbench-layout"><div id="x-sections" class="x-tabs" role="tablist" aria-label="功能板块" aria-orientation="vertical"></div><main id="x-content" role="tabpanel" tabindex="-1"></main></div>
+  </section>
+  <section id="x-messages" class="x-messages x-glass" role="dialog" aria-labelledby="x-messages-title" hidden>
+    <header class="x-panel-header"><h1 id="x-messages-title">消息</h1><button id="x-messages-close" class="x-btn ghost x-close" type="button" aria-label="关闭消息">✕</button></header><div id="x-messages-content"></div>
+  </section>
+  <div id="x-hotspot-label" class="x-hotspot-label" hidden></div>
+  <p id="x-announcer" class="x-sr-only" role="status" aria-live="polite"></p>
+</div>
+<script type="module" src="src/app/shell/loading.js"></script>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

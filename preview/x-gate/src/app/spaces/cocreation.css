@@ -1,0 +1,167 @@
+/* 共创中心内容区。楼色走 var(--place, var(--x-cyan))。 */
+.sp-cocreation {
+  min-width: 0; display: flex; flex-direction: column; gap: 18px;
+  container-type: inline-size; container-name: co;
+  font-size: 15px;
+}
+.sp-cocreation .x-btn, .sp-cocreation .x-chip, .sp-cocreation .x-search input,
+.sp-cocreation select, .sp-cocreation textarea, .sp-cocreation input { min-height: 44px; }
+.sp-cocreation .x-btn, .sp-cocreation .x-chip { min-width: 44px; }
+.sp-cocreation h3 { font-size: 15px; font-weight: 600; }
+.sp-cocreation p { margin: 0; }
+
+.sp-cocreation-bar, .sp-cocreation-chips, .sp-cocreation-actions {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0;
+}
+.sp-cocreation .x-search { display: flex; align-items: center; min-width: 0; }
+.sp-cocreation .x-search input {
+  width: 100%; min-height: 44px; border: 0; background: transparent; color: inherit; font: inherit;
+}
+
+.sp-cocreation-h {
+  display: flex; align-items: center; gap: 8px; margin: 4px 0 0; font-size: 15px;
+}
+.sp-cocreation-sample {
+  font-size: 13px; color: var(--x-muted); border: 0; padding: 0;
+}
+
+.sp-cocreation-empty {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  padding: 12px 8px 20px; text-align: center; color: var(--x-muted);
+}
+.sp-cocreation-empty img { width: 160px; height: 160px; object-fit: contain; }
+.sp-cocreation-empty p { font-size: 15px; color: var(--x-text); }
+
+.sp-cocreation-faces {
+  display: grid; grid-template-columns: 1fr; gap: 12px;
+}
+@container co (min-width: 620px) {
+  .sp-cocreation-faces { grid-template-columns: 1fr 1fr; }
+}
+.sp-cocreation-face {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto; column-gap: 12px; row-gap: 8px;
+  align-items: center; min-width: 0;
+  padding: 12px; border: 1px solid var(--x-line); border-radius: var(--x-radius);
+  background: #b3d4ff06; color: inherit; text-align: left;
+}
+.sp-cocreation-face > .x-btn { grid-column: 1 / -1; }
+.sp-cocreation-facebody { min-width: 0; }
+.sp-cocreation-facebody h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sp-cocreation-facebody p { font-size: 13px; color: var(--x-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sp-cocreation-ring {
+  display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%;
+  box-shadow: inset 0 0 0 2px var(--x-blue);
+}
+.sp-cocreation-face.is-human .sp-cocreation-ring, .sp-cocreation-ring.is-human { box-shadow: inset 0 0 0 2px #2d5bff; }
+.sp-cocreation-face.is-agent .sp-cocreation-ring, .sp-cocreation-ring.is-agent { box-shadow: inset 0 0 0 2px #5fe8ff; }
+.sp-cocreation-ring .x-avatar {
+  width: 48px; height: 48px; object-fit: cover; border: 0;
+  background: url('/assets/panda-avatar-brand-blue-512.webp') center / cover no-repeat;
+}
+.sp-cocreation-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--x-muted); justify-self: end;
+}
+.sp-cocreation-dot.is-on { background: var(--place, var(--x-cyan)); }
+.sp-cocreation-dot.is-live { background: var(--place, var(--x-cyan)); }
+.sp-cocreation-dot.is-upcoming { background: var(--x-blue); }
+.sp-cocreation-dot.is-ended { background: var(--x-muted); }
+.sp-cocreation-face.is-picked { border-color: var(--place, var(--x-cyan)); background: color-mix(in srgb, var(--place, var(--x-cyan)) 12%, transparent); }
+.sp-cocreation-face.is-focus, .sp-cocreation-project.is-focus, .sp-cocreation-work.is-focus, .sp-cocreation-event.is-focus {
+  border-color: var(--place, var(--x-cyan));
+}
+
+.sp-cocreation-projects { display: flex; flex-direction: column; gap: 12px; }
+.sp-cocreation-project, .sp-cocreation-work, .sp-cocreation-event {
+  display: flex; flex-direction: column; gap: 12px; min-width: 0;
+}
+.sp-cocreation-project h3, .sp-cocreation-work h3, .sp-cocreation-event h3 {
+  font-size: 15px; overflow-wrap: anywhere;
+}
+.sp-cocreation-lead { font-size: 13px; color: var(--x-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.sp-cocreation-progress { display: flex; align-items: center; gap: 10px; }
+.sp-cocreation-progress > span { font-size: 13px; color: var(--x-muted); white-space: nowrap; }
+.sp-cocreation-track {
+  flex: 1; min-width: 0; height: 6px; border-radius: 99px; background: #b3d4ff14; overflow: hidden;
+}
+.sp-cocreation-fill {
+  height: 100%; border-radius: 99px; background: var(--place, var(--x-cyan));
+}
+.sp-cocreation-stack { display: flex; align-items: center; }
+.sp-cocreation-stack .x-avatar {
+  width: 28px; height: 28px; border: 2px solid #081020; margin-left: -8px;
+  object-fit: cover;
+  background: url('/assets/panda-avatar-brand-blue-512.webp') center / cover no-repeat;
+}
+.sp-cocreation-stack .x-avatar:first-child { margin-left: 0; }
+.sp-cocreation-stack .x-avatar.is-human { box-shadow: 0 0 0 1px #2d5bff; }
+.sp-cocreation-stack .x-avatar.is-agent { box-shadow: 0 0 0 1px #5fe8ff; }
+.sp-cocreation-more {
+  margin-left: 8px; font-size: 13px; color: var(--x-muted);
+}
+.sp-cocreation-done { font-size: 13px; color: var(--x-muted); }
+.sp-cocreation-cardacts {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0;
+}
+.sp-cocreation .x-btn.sp-cocreation-act {
+  min-height: 36px; height: 36px; padding: 0 12px;
+  background: transparent; border: 1px solid var(--x-line); color: var(--x-text);
+  font-weight: 500;
+}
+.sp-cocreation .x-btn.sp-cocreation-act:hover {
+  border-color: var(--place, var(--x-cyan));
+  color: var(--place, var(--x-cyan));
+  background: color-mix(in srgb, var(--place, var(--x-cyan)) 16%, transparent);
+}
+
+.sp-cocreation-start { align-self: flex-start; }
+.sp-cocreation-start[hidden] { display: none !important; }
+.sp-cocreation-form { display: flex; flex-direction: column; gap: 16px; }
+.sp-cocreation-form[hidden] { display: none !important; }
+.sp-cocreation-form .x-field { margin: 0; }
+.sp-cocreation-morefields { border: 1px solid var(--x-line); border-radius: var(--x-radius-sm); padding: 8px 12px; }
+.sp-cocreation-morefields summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-size: 15px; }
+.sp-cocreation-morefields[open] summary { margin-bottom: 12px; }
+.sp-cocreation-morefields .x-field { margin-bottom: 16px; }
+.sp-cocreation-error { color: var(--x-danger); margin: 0; font-size: 13px; }
+
+.sp-cocreation-workhead, .sp-cocreation-eventhead {
+  display: flex; align-items: center; gap: 12px; min-width: 0;
+}
+.sp-cocreation-workhead .sp-cocreation-facebody, .sp-cocreation-eventhead .sp-cocreation-facebody { flex: 1; }
+
+.sp-cocreation-attach { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-width: 0; }
+.sp-cocreation-attach select {
+  min-height: 44px; min-width: 0; max-width: 100%; padding: 10px 12px;
+  color: var(--x-text); background: #040b17b8; border: 1px solid var(--x-line);
+  border-radius: var(--x-radius-sm); font-size: 15px;
+}
+.sp-cocreation-apply { display: flex; flex-direction: column; gap: 8px; }
+.sp-cocreation-apply textarea {
+  width: 100%; min-height: 72px; padding: 11px 14px; color: var(--x-text); background: #040b17b8;
+  border: 1px solid var(--x-line); border-radius: var(--x-radius-sm); font-size: 15px; resize: vertical;
+}
+
+.sp-cocreation-calwrap { display: flex; flex-direction: column; gap: 12px; }
+.sp-cocreation-calnav { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sp-cocreation-calnav b { font-size: 15px; font-weight: 600; }
+.sp-cocreation-cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.sp-cocreation-calwd, .sp-cocreation-calpad { min-height: 28px; text-align: center; color: var(--x-muted); font-size: 13px; }
+.sp-cocreation-calday {
+  min-height: 44px; min-width: 0; border: 1px solid transparent; border-radius: 8px;
+  background: transparent; color: var(--x-text); font: inherit;
+}
+.sp-cocreation-calday.has-ev { border-color: var(--x-line); background: #b3d4ff0b; }
+.sp-cocreation-calday.is-today { box-shadow: inset 0 0 0 1px var(--x-blue); }
+.sp-cocreation-calday.is-on, .sp-cocreation-calday[aria-pressed="true"] {
+  border-color: var(--place, var(--x-cyan)); background: color-mix(in srgb, var(--place, var(--x-cyan)) 16%, transparent);
+  color: var(--place, var(--x-cyan));
+}
+.sp-cocreation-calday:disabled { opacity: .4; }
+.sp-cocreation-foot { padding-top: 4px; }
+
+@media (max-width: 760px) {
+  .sp-cocreation { gap: 14px; }
+  .sp-cocreation-attach { width: 100%; }
+  .sp-cocreation-attach select { flex: 1 1 160px; }
+}

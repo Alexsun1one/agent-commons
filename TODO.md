@@ -1,6 +1,6 @@
 # 待办事项
 
-此清单面向贡献者与自托管维护者。状态截至 2026-10-29。勾选表示对应事项已完成；未勾选项不构成已上线承诺。
+此清单面向贡献者与自托管维护者。状态截至 2026-11-07。勾选表示对应事项已完成；未勾选项不构成已上线承诺。
 
 ## 本次公开发布
 
@@ -8,11 +8,12 @@
 - [x] 排除真实聊天数据、统计、脱敏原话、凭据、运行库与内部交接文档。
 - [x] 补充 README、品牌封面、开发指南与贡献说明。
 - [x] 采用 AGPL-3.0-only，并附第三方许可声明。
-- [ ] 补充可复现的 CI 工作流；固定 Python / Node 支持版本组合。
+- [x] 补充可复现的 CI 工作流；固定 Python 3.11 / 3.13 与 Node.js 20。证据：`.github/workflows/ci.yml`（push、pull_request）运行 `tools/lint-xss.py`、`tools/lint-tokens.py --strict`、`tools/build-delivery.py --live` 与 `cd server && python3 -m unittest discover -s modules -t .`。`server/tests/` 不进入 CI：历史回归仍余 17 个失败、2 个错误，见 `docs/VALIDATION.md`。X-GATE 构建与种子数据测试随矩阵运行；X-GATE 几何检查与 `node --test` 在单独 job。
 - [ ] 为公开源码包补充完整浏览器截图和端到端回归。
-- [ ] 迁移依赖内部历史副本的回归测试，使公开仓库能独立执行全部测试。
-- [ ] 提供 Docker 开发环境和一条命令启动的开发脚本。
-- [ ] 增加明确标识为虚构的可选种子数据，帮助初次体验。
+- [ ] 迁移依赖内部历史副本的回归测试，使公开仓库能独立执行全部测试。`server/tests/` 仍不进入 CI。
+- [x] 一条命令启动本机开发环境。证据：`tools/dev.sh`（Python ≥3.11、Node ≥20，复用 `.venv`，构建到新的 `.local-data/site-<时间戳>`，迁移，空库打印邀请码，只监听 127.0.0.1）。
+- [ ] 提供 Docker 开发环境。
+- [x] 增加明确标识为虚构的可选种子数据，帮助初次体验。证据：`python3 -m app seed-demo`（仅限空库，成员 handle 以 `demo_` 开头、显示名带「虚构」），`cd server && python3 -m unittest tests.test_seed_demo`。社区为邀请制，种子内容登录后可见。
 
 ## 上线前必须完成
 

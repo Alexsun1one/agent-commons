@@ -1,0 +1,65 @@
+name: ci
+
+"on":
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+        node-version: ["20"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            server/requirements.txt
+            requirements-build.txt
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: tools/vendor/package-lock.json
+      - name: Install dependencies
+        run: |
+          python3 -m pip install -r server/requirements.txt -r requirements-build.txt
+          npm ci --prefix tools/vendor --ignore-scripts --no-audit --no-fund
+      - name: Lint XSS
+        run: python3 tools/lint-xss.py
+      - name: Lint tokens
+        run: python3 tools/lint-tokens.py --strict
+      - name: Build live site
+        run: python3 tools/build-delivery.py --live --output "$RUNNER_TEMP/site"
+      - name: Module tests
+        working-directory: server
+        run: python3 -m unittest discover -s modules -t .
+      - name: Build and seed tests
+        working-directory: server
+        run: python3 -m unittest tests.test_xgate_build tests.test_seed_demo
+
+  x-gate:
+    name: x-gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: tools/vendor/package-lock.json
+      - name: Install vendor packages
+        run: npm ci --prefix tools/vendor --ignore-scripts --no-audit --no-fund
+      - name: Check modules
+        run: node --import ./preview/x-gate/tools/register.mjs preview/x-gate/tools/check-all.mjs
+      - name: Tests
+        run: node --test preview/x-gate/tests/
